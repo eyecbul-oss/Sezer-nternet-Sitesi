@@ -1,0 +1,106 @@
+
+/* HOTFIX V4 */
+
+/* Yazılar profilin üstüne binmesin */
+.float-card{
+    position:absolute!important;
+    z-index:30!important;
+    background:rgba(2,6,23,.82)!important;
+    backdrop-filter:blur(16px)!important;
+    border:1px solid rgba(255,255,255,.12)!important;
+    border-radius:18px!important;
+    padding:14px 18px!important;
+    color:white!important;
+    font-weight:800!important;
+    line-height:1.5!important;
+    box-shadow:0 18px 40px rgba(0,0,0,.35)!important;
+    max-width:260px!important;
+}
+
+.float-card small{
+    display:block!important;
+    color:#cbd5e1!important;
+    font-size:13px!important;
+    margin-top:4px!important;
+}
+
+.float-card.one{
+    top:70px!important;
+    right:90px!important;
+}
+
+.float-card.two{
+    top:170px!important;
+    right:40px!important;
+}
+
+.float-card.three{
+    top:280px!important;
+    right:120px!important;
+}
+
+/* Profil resmi geri gelsin */
+.profile-wrap{
+    width:390px!important;
+    height:520px!important;
+    overflow:hidden!important;
+    border-radius:42px!important;
+    position:relative!important;
+    z-index:10!important;
+}
+
+.profile-wrap img{
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
+    object-position:center top!important;
+    display:block!important;
+    opacity:1!important;
+    visibility:visible!important;
+    filter:none!important;
+}
+
+/* WhatsApp butonu düzelt */
+.sezr-wa-float{
+    position:fixed!important;
+    right:22px!important;
+    bottom:22px!important;
+    top:auto!important;
+    transform:none!important;
+    z-index:999!important;
+    padding:14px 22px!important;
+    border-radius:999px!important;
+    box-shadow:0 10px 40px rgba(37,211,102,.45)!important;
+}
+
+/* Hero daha dengeli */
+.hero.page-hero{
+    align-items:center!important;
+}
+
+.hero-visual{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-height:560px!important;
+}
+
+/* Mobil */
+@media(max-width:980px){
+
+.float-card{
+display:none!important;
+}
+
+.profile-wrap{
+width:min(300px,85vw)!important;
+height:420px!important;
+}
+
+.sezr-wa-float{
+right:14px!important;
+bottom:14px!important;
+padding:12px 18px!important;
+}
+
+}
