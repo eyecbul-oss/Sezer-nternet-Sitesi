@@ -3,122 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SezR Focus Room V3</title>
+<title>SezR Focus Room V4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
---gold:#facc15;--blue:#38bdf8;--green:#25d366;--bg:#020617;--card:rgba(255,255,255,.09);
---accent:56,189,248;
-}
+:root{--gold:#facc15;--blue:#38bdf8;--green:#25d366;--accent:56,189,248}
 body{font-family:Inter,sans-serif;background:#020617;color:white;overflow-x:hidden;min-height:100vh}
 body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 20% 20%,rgba(var(--accent),.22),transparent 35%),radial-gradient(circle at 80% 20%,rgba(250,204,21,.14),transparent 30%),linear-gradient(135deg,#020617,#07111f 45%,#111827);z-index:-5;transition:.6s}
-body.rain-theme{--accent:56,189,248}
-body.library-theme{--accent:167,139,250}
-body.cafe-theme{--accent:250,204,21}
-body.fire-theme{--accent:251,146,60}
-body.silent-theme{--accent:34,197,94}
+body.rain-theme{--accent:56,189,248} body.library-theme{--accent:167,139,250} body.cafe-theme{--accent:250,204,21} body.fire-theme{--accent:251,146,60} body.silent-theme{--accent:34,197,94}
 .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:40px 40px;opacity:.2;z-index:-4}
-.rain{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-2}
-.drop{position:absolute;width:2px;height:90px;background:linear-gradient(transparent,rgba(255,255,255,.55));animation:rain linear infinite;opacity:.38}
-@keyframes rain{from{transform:translateY(-120px)}to{transform:translateY(110vh)}}
-.symbols{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:-3}
-.symbol{position:absolute;font-weight:900;font-family:Montserrat;opacity:.08;animation:float 18s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-35px) rotate(8deg)}}
+.rain{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-2}.drop{position:absolute;width:2px;height:90px;background:linear-gradient(transparent,rgba(255,255,255,.55));animation:rain linear infinite;opacity:.38}@keyframes rain{from{transform:translateY(-120px)}to{transform:translateY(110vh)}}
+.symbols{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:-3}.symbol{position:absolute;font-weight:900;font-family:Montserrat;opacity:.08;animation:float 18s ease-in-out infinite}@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-35px) rotate(8deg)}}
 .container{max-width:1360px;margin:auto;padding:24px}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:18px;padding:16px 18px;border-radius:24px;background:rgba(2,6,23,.72);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(18px)}
-.logo{font-family:Montserrat;font-size:28px;font-weight:900}.logo span{color:var(--gold)}
-.nav{display:flex;gap:8px;flex-wrap:wrap}.nav a{color:#e5e7eb;text-decoration:none;font-weight:900;font-size:13px;padding:10px 12px;border-radius:999px;background:rgba(15,23,42,.75);border:1px solid rgba(255,255,255,.10)}.nav a.active{color:var(--gold);border-color:var(--gold)}
-.hero{display:grid;grid-template-columns:1fr 480px;gap:46px;align-items:center;min-height:calc(100vh - 100px)}
-.badge{display:inline-flex;padding:12px 18px;border-radius:999px;background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.35);color:var(--gold);font-weight:900;margin-bottom:22px}
-h1{font-family:Montserrat;font-size:clamp(46px,7vw,96px);line-height:1;text-transform:uppercase;margin-bottom:24px}.gold{color:var(--gold);text-shadow:0 0 35px rgba(250,204,21,.25)}
-.lead{font-size:20px;line-height:1.7;max-width:700px;color:#dbeafe}
-.actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
-.btn{height:58px;padding:0 24px;border-radius:18px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-weight:900;color:white;background:rgba(15,23,42,.85);border:1px solid rgba(255,255,255,.14);transition:.25s;backdrop-filter:blur(10px);cursor:pointer}
-.btn:hover{transform:translateY(-3px) scale(1.02)}.btn.green{background:linear-gradient(180deg,#25d366,#128c4a);box-shadow:0 0 30px rgba(37,211,102,.25)}
-.focus-panel{position:relative;padding:30px;border-radius:42px;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 80px rgba(0,0,0,.35);backdrop-filter:blur(22px);overflow:hidden}
-.focus-panel::before{content:"";position:absolute;inset:-12px;border-radius:52px;background:conic-gradient(from 0deg,transparent,rgba(var(--accent),.65),rgba(250,204,21,.65),transparent);filter:blur(14px);opacity:.4;animation:spin 16s linear infinite;z-index:-1}
-@keyframes spin{to{transform:rotate(360deg)}}
-.timer-wrap{position:relative;width:340px;height:340px;margin:10px auto 24px;display:grid;place-items:center}
-.progress-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--gold) var(--progress,0deg),rgba(255,255,255,.08) 0deg);filter:drop-shadow(0 0 24px rgba(250,204,21,.16))}
-.progress-ring::after{content:"";position:absolute;inset:14px;border-radius:50%;background:rgba(2,6,23,.88);border:1px solid rgba(255,255,255,.08)}
-.timer-content{position:relative;z-index:2;text-align:center}
-#timer{font-family:Montserrat;font-size:78px;font-weight:900;letter-spacing:-3px;text-shadow:0 0 30px rgba(250,204,21,.18)}
-.timer-sub{color:#cbd5e1;font-weight:800;margin-top:6px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:18px;padding:16px 18px;border-radius:24px;background:rgba(2,6,23,.72);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(18px)}.logo{font-family:Montserrat;font-size:28px;font-weight:900}.logo span{color:var(--gold)}.nav{display:flex;gap:8px;flex-wrap:wrap}.nav a{color:#e5e7eb;text-decoration:none;font-weight:900;font-size:13px;padding:10px 12px;border-radius:999px;background:rgba(15,23,42,.75);border:1px solid rgba(255,255,255,.10)}.nav a.active{color:var(--gold);border-color:var(--gold)}
+.hero{display:grid;grid-template-columns:1fr 500px;gap:46px;align-items:center;min-height:calc(100vh - 100px)}.badge{display:inline-flex;padding:12px 18px;border-radius:999px;background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.35);color:var(--gold);font-weight:900;margin-bottom:22px}h1{font-family:Montserrat;font-size:clamp(46px,7vw,96px);line-height:1;text-transform:uppercase;margin-bottom:24px}.gold{color:var(--gold);text-shadow:0 0 35px rgba(250,204,21,.25)}.lead{font-size:20px;line-height:1.7;max-width:700px;color:#dbeafe}.actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}.btn{height:58px;padding:0 24px;border-radius:18px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-weight:900;color:white;background:rgba(15,23,42,.85);border:1px solid rgba(255,255,255,.14);transition:.25s;backdrop-filter:blur(10px);cursor:pointer}.btn:hover{transform:translateY(-3px) scale(1.02)}.btn.green{background:linear-gradient(180deg,#25d366,#128c4a);box-shadow:0 0 30px rgba(37,211,102,.25)}
+.focus-panel{position:relative;padding:30px;border-radius:42px;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 80px rgba(0,0,0,.35);backdrop-filter:blur(22px);overflow:hidden}.focus-panel::before{content:"";position:absolute;inset:-12px;border-radius:52px;background:conic-gradient(from 0deg,transparent,rgba(var(--accent),.65),rgba(250,204,21,.65),transparent);filter:blur(14px);opacity:.4;animation:spin 16s linear infinite;z-index:-1}@keyframes spin{to{transform:rotate(360deg)}}
+.timer-wrap{position:relative;width:340px;height:340px;margin:10px auto 24px;display:grid;place-items:center}.progress-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--gold) var(--progress,0deg),rgba(255,255,255,.08) 0deg);filter:drop-shadow(0 0 24px rgba(250,204,21,.16))}.progress-ring::after{content:"";position:absolute;inset:14px;border-radius:50%;background:rgba(2,6,23,.88);border:1px solid rgba(255,255,255,.08)}.timer-content{position:relative;z-index:2;text-align:center}#timer{font-family:Montserrat;font-size:78px;font-weight:900;letter-spacing:-3px;text-shadow:0 0 30px rgba(250,204,21,.18)}.timer-sub{color:#cbd5e1;font-weight:800;margin-top:6px}
 .control-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.ctrl{height:54px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(15,23,42,.86);color:white;font-weight:900;cursor:pointer;transition:.25s}.ctrl:hover{transform:translateY(-2px);background:rgba(250,204,21,.12)}
 .modes{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}.mode{padding:12px;border-radius:16px;text-align:center;font-weight:900;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);cursor:pointer}.mode.active{background:rgba(250,204,21,.14);border-color:rgba(250,204,21,.35);color:var(--gold)}
-.goal-box{margin-top:18px;display:grid;grid-template-columns:1fr auto;gap:10px}.goal-box input{min-width:0;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(15,23,42,.86);color:white;padding:14px;outline:none}.goal-box button{border:0;border-radius:16px;background:var(--gold);font-weight:900;color:#111827;padding:0 16px}
-.quote-box{margin-top:18px;padding:18px;border-radius:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#dbeafe;line-height:1.6;font-weight:700;text-align:center}
+.goal-box{margin-top:18px;display:grid;grid-template-columns:1fr auto;gap:10px}.goal-box input{min-width:0;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(15,23,42,.86);color:white;padding:14px;outline:none}.goal-box button{border:0;border-radius:16px;background:var(--gold);font-weight:900;color:#111827;padding:0 16px}.quote-box{margin-top:18px;padding:18px;border-radius:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#dbeafe;line-height:1.6;font-weight:700;text-align:center}
 .section-title{margin:80px 0 24px;font-size:34px;font-family:Montserrat;display:flex;align-items:center;gap:18px}.section-title::after{content:"";height:2px;flex:1;background:linear-gradient(90deg,var(--gold),transparent)}
 .ambient-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.ambient-card{position:relative;overflow:hidden;padding:28px;border-radius:34px;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 42px rgba(0,0,0,.25);min-height:230px;transition:.3s;cursor:pointer}.ambient-card:hover,.ambient-card.active{transform:translateY(-8px);border-color:rgba(250,204,21,.38);box-shadow:0 24px 70px rgba(0,0,0,.34),0 0 35px rgba(var(--accent),.16)}.ambient-card h3{font-size:28px;font-family:Montserrat;margin-bottom:10px}.ambient-card p{line-height:1.7;color:#dbeafe}
+.app-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.task-card,.session-card{padding:28px;border-radius:34px;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 42px rgba(0,0,0,.24)}.task-input{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:16px}.task-input input{background:rgba(15,23,42,.86);border:1px solid rgba(255,255,255,.14);border-radius:16px;color:white;padding:14px}.task-input button{border:0;border-radius:16px;padding:0 18px;background:var(--gold);font-weight:900}.task-list{display:grid;gap:10px;margin-top:16px}.task{display:flex;align-items:center;gap:10px;padding:12px;border-radius:16px;background:rgba(15,23,42,.72);border:1px solid rgba(255,255,255,.10);color:#dbeafe}.task.done{text-decoration:line-through;color:#94a3b8}.task button{margin-left:auto;background:rgba(239,68,68,.16);border:1px solid rgba(239,68,68,.24);color:#fecaca;border-radius:12px;padding:7px 10px}
+.session-card h3,.task-card h3{font-family:Montserrat;font-size:28px;margin-bottom:10px}.session-list{display:grid;gap:10px;margin-top:16px}.session-item{padding:12px;border-radius:16px;background:rgba(15,23,42,.72);border:1px solid rgba(255,255,255,.10);color:#dbeafe;font-weight:800}
 .music-bar{margin-top:50px;padding:24px;border-radius:32px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;align-items:center;gap:20px}.eq{display:flex;gap:6px;align-items:flex-end;height:44px}.eq span{width:7px;background:var(--gold);border-radius:999px;animation:eq 1s ease-in-out infinite}.eq span:nth-child(2){animation-delay:.2s}.eq span:nth-child(3){animation-delay:.4s}.eq span:nth-child(4){animation-delay:.6s}.eq span:nth-child(5){animation-delay:.8s}@keyframes eq{0%,100%{height:10px}50%{height:42px}}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:26px}.stat-card{padding:28px;border-radius:32px;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 42px rgba(0,0,0,.24)}.stat-card b{display:block;font-size:42px;font-family:Montserrat;color:var(--gold);margin-bottom:8px}.stat-card span{color:#dbeafe;font-weight:800}
-.quick{display:none}
-@media(max-width:980px){.topbar{flex-direction:column}.hero{grid-template-columns:1fr;text-align:center}.actions{justify-content:center}.timer-wrap{width:260px;height:260px}#timer{font-size:58px}.control-row,.modes,.ambient-grid,.stats-grid{grid-template-columns:1fr}.music-bar{flex-direction:column}.goal-box{grid-template-columns:1fr}.quick{position:fixed;left:0;right:0;bottom:0;height:70px;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(2,6,23,.95);backdrop-filter:blur(12px);z-index:99}.quick a{text-decoration:none;color:#d1d5db;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center}.quick span{font-size:20px}.quick a.active{color:var(--gold)}.container{padding-bottom:90px}}
+.success{position:fixed;inset:0;background:rgba(2,6,23,.82);backdrop-filter:blur(18px);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}.success.show{display:flex}.success-box{max-width:560px;text-align:center;padding:42px;border-radius:42px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.18);box-shadow:0 30px 90px rgba(0,0,0,.45)}.success-box h2{font-family:Montserrat;font-size:48px;margin-bottom:14px;color:var(--gold)}.success-box p{color:#dbeafe;line-height:1.7;font-size:18px}.success-box button{margin-top:24px}
+.clean-mode .topbar,.clean-mode .ambient-grid,.clean-mode .app-grid,.clean-mode .music-bar,.clean-mode .stats-grid,.clean-mode .section-title{display:none!important}.clean-mode .hero{min-height:100vh;grid-template-columns:1fr;text-align:center}.clean-mode .focus-panel{max-width:520px;margin:auto}.clean-mode .hero>div:first-child{display:none}
+.quick{display:none}@media(max-width:980px){.topbar{flex-direction:column}.hero{grid-template-columns:1fr;text-align:center}.actions{justify-content:center}.timer-wrap{width:260px;height:260px}#timer{font-size:58px}.control-row,.modes,.ambient-grid,.stats-grid,.app-grid{grid-template-columns:1fr}.music-bar{flex-direction:column}.goal-box,.task-input{grid-template-columns:1fr}.quick{position:fixed;left:0;right:0;bottom:0;height:70px;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(2,6,23,.95);backdrop-filter:blur(12px);z-index:99}.quick a{text-decoration:none;color:#d1d5db;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center}.quick span{font-size:20px}.quick a.active{color:var(--gold)}.container{padding-bottom:90px}}
 </style>
 </head>
-<body>
+<body class="rain-theme">
 <div class="grid-bg"></div><div class="rain" id="rain"></div><div class="symbols" id="symbols"></div>
+<div class="success" id="success"><div class="success-box"><h2>Seans Tamamlandı 🔥</h2><p>Harika! Bir pomodoro daha bitti. Kısa bir mola ver, sonra kaldığın yerden devam et.</p><button class="btn green" onclick="closeSuccess()">Devam Et</button></div></div>
 <div class="container">
 <header class="topbar"><div class="logo">Sez<span>R</span> Focus</div><nav class="nav"><a href="index.html">Ana Sayfa</a><a href="dersler.html">Derslerim</a><a href="youtube.html">YouTube</a><a href="pdf.html">PDF</a><a class="active" href="focus.html">Focus</a><a href="iletisim.html">Kayıt</a></nav></header>
 <section class="hero">
-<div>
-<div class="badge">SEZR FOCUS ROOM V3</div>
-<h1>Çalışma<br><span class="gold">Moduna Gir</span></h1>
-<p class="lead">Pomodoro, ortam seçimi, yağmur animasyonu, hedef takibi ve kayıtlı çalışma istatistikleriyle premium odaklanma alanı.</p>
-<div class="actions"><button class="btn green" onclick="startTimer()">Pomodoro Başlat</button><button class="btn" id="fullscreenBtn">Fullscreen</button><button class="btn" onclick="changeQuote()">Motivasyon</button></div>
-</div>
-<div class="focus-panel">
-<div class="timer-wrap"><div class="progress-ring" id="progressRing"></div><div class="timer-content"><div id="timer">25:00</div><div class="timer-sub" id="statusText">Focus Modu Hazır</div></div></div>
-<div class="control-row"><button class="ctrl" onclick="startTimer()">Başlat</button><button class="ctrl" onclick="pauseTimer()">Duraklat</button><button class="ctrl" onclick="resetTimer()">Sıfırla</button><button class="ctrl" onclick="toggleRain()">Yağmur</button></div>
-<div class="modes"><div class="mode active" onclick="setMode(25,this)">25 / 5</div><div class="mode" onclick="setMode(45,this)">45 / 10</div><div class="mode" onclick="setMode(60,this)">60 / 15</div><div class="mode" onclick="setMode(120,this)">Deep</div></div>
-<div class="goal-box"><input id="goalInput" placeholder="Bugünkü hedefini yaz: örn. 30 problem çözeceğim"><button onclick="saveGoal()">Kaydet</button></div>
-<div class="quote-box" id="quoteBox">Disiplin motivasyondan güçlüdür.</div>
-</div>
+<div><div class="badge">SEZR FOCUS ROOM V4</div><h1>Masaya Otur.<br><span class="gold">Akışı Başlat.</span></h1><p class="lead">Görev listesi, kayıtlı istatistikler, ortam seçimi, yağmur animasyonu ve clean fullscreen modu ile gerçek çalışma uygulaması hissi.</p><div class="actions"><button class="btn green" onclick="startTimer()">Pomodoro Başlat</button><button class="btn" id="fullscreenBtn">Fullscreen</button><button class="btn" onclick="toggleClean()">Clean Mode</button></div></div>
+<div class="focus-panel"><div class="timer-wrap"><div class="progress-ring" id="progressRing"></div><div class="timer-content"><div id="timer">25:00</div><div class="timer-sub" id="statusText">Focus Modu Hazır</div></div></div><div class="control-row"><button class="ctrl" onclick="startTimer()">Başlat</button><button class="ctrl" onclick="pauseTimer()">Duraklat</button><button class="ctrl" onclick="resetTimer()">Sıfırla</button><button class="ctrl" onclick="toggleRain()">Yağmur</button></div><div class="modes"><div class="mode active" onclick="setMode(25,this)">25 / 5</div><div class="mode" onclick="setMode(45,this)">45 / 10</div><div class="mode" onclick="setMode(60,this)">60 / 15</div><div class="mode" onclick="setMode(120,this)">Deep</div></div><div class="goal-box"><input id="goalInput" placeholder="Bugünkü hedefini yaz"><button onclick="saveGoal()">Kaydet</button></div><div class="quote-box" id="quoteBox">Disiplin motivasyondan güçlüdür.</div></div>
 </section>
-<h2 class="section-title">Ortam Seç</h2>
-<div class="ambient-grid">
-<div class="ambient-card active" onclick="setTheme('rain',this)"><h3>🌧 Yağmurlu Gece</h3><p>Loş gece atmosferi ve sakin yağmur efektiyle odaklan.</p></div>
-<div class="ambient-card" onclick="setTheme('library',this)"><h3>📚 Kütüphane</h3><p>Sessiz çalışma ortamı hissi veren mor/mavi focus modu.</p></div>
-<div class="ambient-card" onclick="setTheme('cafe',this)"><h3>☕ Lo-fi Cafe</h3><p>Sıcak tonlar ve soft çalışma atmosferi.</p></div>
-<div class="ambient-card" onclick="setTheme('fire',this)"><h3>🔥 Şömine</h3><p>Turuncu glow ile sakin ve sıcak çalışma hissi.</p></div>
-<div class="ambient-card" onclick="setTheme('silent',this)"><h3>🎧 Sessiz Focus</h3><p>Minimal ekran, sadece sayaç ve hedef.</p></div>
-<div class="ambient-card" onclick="setTheme('rain',this)"><h3>⚡ Şimşekli Gece</h3><p>Dramatik gece atmosferi ve güçlü focus hissi.</p></div>
-</div>
-<div class="music-bar"><div><h2 style="font-family:Montserrat;font-size:30px;margin-bottom:6px">Focus Music</h2><p style="color:#cbd5e1">Görsel equalizer aktif. MP3 dosyaları eklenince gerçek player bağlanacak.</p></div><div class="eq"><span></span><span></span><span></span><span></span><span></span></div></div>
-<h2 class="section-title">Çalışma İstatistikleri</h2>
-<div class="stats-grid">
-<div class="stat-card"><b id="doneCount">0</b><span>Tamamlanan Pomodoro</span></div>
-<div class="stat-card"><b id="workTime">00:00</b><span>Toplam Çalışma</span></div>
-<div class="stat-card"><b id="streak">1</b><span>Günlük Seri</span></div>
-<div class="stat-card"><b id="focusScore">85%</b><span>Focus Puanı</span></div>
-</div>
-</div>
-<nav class="quick"><a href="index.html"><span>🏠</span>Ana</a><a href="dersler.html"><span>📖</span>Ders</a><a href="youtube.html"><span>▶️</span>Video</a><a class="active" href="focus.html"><span>🎧</span>Focus</a><a href="iletisim.html"><span>🟢</span>Kayıt</a></nav>
+<h2 class="section-title">Ortam Seç</h2><div class="ambient-grid"><div class="ambient-card active" onclick="setTheme('rain',this)"><h3>🌧 Yağmurlu Gece</h3><p>Loş gece atmosferi ve sakin yağmur efektiyle odaklan.</p></div><div class="ambient-card" onclick="setTheme('library',this)"><h3>📚 Kütüphane</h3><p>Sessiz çalışma ortamı hissi veren mor/mavi focus modu.</p></div><div class="ambient-card" onclick="setTheme('cafe',this)"><h3>☕ Lo-fi Cafe</h3><p>Sıcak tonlar ve soft çalışma atmosferi.</p></div><div class="ambient-card" onclick="setTheme('fire',this)"><h3>🔥 Şömine</h3><p>Turuncu glow ile sakin ve sıcak çalışma hissi.</p></div><div class="ambient-card" onclick="setTheme('silent',this)"><h3>🎧 Sessiz Focus</h3><p>Minimal ekran, sadece sayaç ve hedef.</p></div><div class="ambient-card" onclick="setTheme('rain',this)"><h3>⚡ Şimşekli Gece</h3><p>Dramatik gece atmosferi ve güçlü focus hissi.</p></div></div>
+<h2 class="section-title">Görev ve Seans Takibi</h2><div class="app-grid"><div class="task-card"><h3>Bugünkü Görevler</h3><p style="color:#dbeafe;line-height:1.6">Çalışırken yapacağın işleri küçük maddelere böl.</p><div class="task-input"><input id="taskInput" placeholder="Örn. 20 problem çöz"><button onclick="addTask()">Ekle</button></div><div class="task-list" id="taskList"></div></div><div class="session-card"><h3>Son Seanslar</h3><p style="color:#dbeafe;line-height:1.6">Tamamlanan seansların burada görünür.</p><div class="session-list" id="sessionList"></div></div></div>
+<div class="music-bar"><div><h2 style="font-family:Montserrat;font-size:30px;margin-bottom:6px">Focus Music</h2><p style="color:#cbd5e1">MP3 dosyaları eklenince gerçek player bağlanacak. Şimdilik görsel equalizer aktif.</p></div><div class="eq"><span></span><span></span><span></span><span></span><span></span></div></div>
+<h2 class="section-title">Çalışma İstatistikleri</h2><div class="stats-grid"><div class="stat-card"><b id="doneCount">0</b><span>Tamamlanan Pomodoro</span></div><div class="stat-card"><b id="workTime">00:00</b><span>Toplam Çalışma</span></div><div class="stat-card"><b id="streak">1</b><span>Günlük Seri</span></div><div class="stat-card"><b id="focusScore">85%</b><span>Focus Puanı</span></div></div>
+</div><nav class="quick"><a href="index.html"><span>🏠</span>Ana</a><a href="dersler.html"><span>📖</span>Ders</a><a href="youtube.html"><span>▶️</span>Video</a><a class="active" href="focus.html"><span>🎧</span>Focus</a><a href="iletisim.html"><span>🟢</span>Kayıt</a></nav>
 <script>
-const symbols=["∫","π","√","Σ","Δ","f(x)","lim","x²","∞"];
-const layer=document.getElementById("symbols");
-for(let i=0;i<30;i++){const s=document.createElement("span");s.className="symbol";s.textContent=symbols[i%symbols.length];s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";s.style.fontSize=(24+Math.random()*60)+"px";s.style.animationDuration=(10+Math.random()*15)+"s";layer.appendChild(s);}
-const rain=document.getElementById("rain");
-for(let i=0;i<90;i++){const d=document.createElement("div");d.className="drop";d.style.left=Math.random()*100+"%";d.style.animationDuration=(0.6+Math.random()*0.6)+"s";d.style.animationDelay=Math.random()*2+"s";rain.appendChild(d);}
-let rainVisible=true;function toggleRain(){rainVisible=!rainVisible;rain.style.display=rainVisible?"block":"none";}
-let timer,total=1500,time=1500,running=false,worked=Number(localStorage.getItem("sezrWorked")||0),done=Number(localStorage.getItem("sezrDone")||0);
-const ring=document.getElementById("progressRing");
+const symbols=["∫","π","√","Σ","Δ","f(x)","lim","x²","∞"];const layer=document.getElementById("symbols");for(let i=0;i<30;i++){const s=document.createElement("span");s.className="symbol";s.textContent=symbols[i%symbols.length];s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";s.style.fontSize=(24+Math.random()*60)+"px";s.style.animationDuration=(10+Math.random()*15)+"s";layer.appendChild(s);}
+const rain=document.getElementById("rain");for(let i=0;i<90;i++){const d=document.createElement("div");d.className="drop";d.style.left=Math.random()*100+"%";d.style.animationDuration=(0.6+Math.random()*0.6)+"s";d.style.animationDelay=Math.random()*2+"s";rain.appendChild(d);}let rainVisible=true;function toggleRain(){rainVisible=!rainVisible;rain.style.display=rainVisible?"block":"none";}
+let timer,total=1500,time=1500,running=false,worked=Number(localStorage.getItem("sezrWorked")||0),done=Number(localStorage.getItem("sezrDone")||0);const ring=document.getElementById("progressRing");
 function updateDisplay(){const min=Math.floor(time/60),sec=time%60;document.getElementById("timer").textContent=`${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;let deg=((total-time)/total)*360;ring.style.setProperty("--progress",deg+"deg");document.getElementById("doneCount").textContent=done;let wm=Math.floor(worked/60),ws=worked%60;document.getElementById("workTime").textContent=`${String(wm).padStart(2,'0')}:${String(ws).padStart(2,'0')}`;document.getElementById("focusScore").textContent=Math.min(99,85+done)+"%";}
-function startTimer(){if(running)return;running=true;document.getElementById("statusText").textContent="Focus Modu Aktif";timer=setInterval(()=>{if(time>0){time--;worked++;localStorage.setItem("sezrWorked",worked);updateDisplay();}else{clearInterval(timer);running=false;done++;localStorage.setItem("sezrDone",done);document.getElementById("quoteBox").textContent="Pomodoro tamamlandı 🔥";document.getElementById("statusText").textContent="Seans Tamamlandı";updateDisplay();}},1000);}
+function startTimer(){if(running)return;running=true;document.getElementById("statusText").textContent="Focus Modu Aktif";timer=setInterval(()=>{if(time>0){time--;worked++;localStorage.setItem("sezrWorked",worked);updateDisplay();}else{completeSession();}},1000);}
+function completeSession(){clearInterval(timer);running=false;done++;localStorage.setItem("sezrDone",done);addSession();document.getElementById("quoteBox").textContent="Pomodoro tamamlandı 🔥";document.getElementById("statusText").textContent="Seans Tamamlandı";document.getElementById("success").classList.add("show");updateDisplay();}
+function closeSuccess(){document.getElementById("success").classList.remove("show");resetTimer();}
 function pauseTimer(){clearInterval(timer);running=false;document.getElementById("statusText").textContent="Duraklatıldı";}
 function resetTimer(){clearInterval(timer);running=false;time=total;document.getElementById("statusText").textContent="Focus Modu Hazır";updateDisplay();}
 function setMode(min,el){document.querySelectorAll('.mode').forEach(m=>m.classList.remove('active'));el.classList.add('active');total=min*60;time=total;updateDisplay();}
 function setTheme(theme,el){document.body.className=theme+"-theme";document.querySelectorAll(".ambient-card").forEach(c=>c.classList.remove("active"));el.classList.add("active");rain.style.display=(theme==="rain")?"block":"none";rainVisible=theme==="rain";}
-const quotes=["Disiplin motivasyondan güçlüdür.","Şu an çalışmak gelecekteki seni değiştiriyor.","Her çözülen soru seni güçlendirir.","Odaklandığın yerde gelişim başlar.","Bugünkü emek yarının rahatlığıdır.","Telefonu bırak, hedefe bak."];
-function changeQuote(){document.getElementById("quoteBox").textContent=quotes[Math.floor(Math.random()*quotes.length)];}
+const quotes=["Disiplin motivasyondan güçlüdür.","Şu an çalışmak gelecekteki seni değiştiriyor.","Her çözülen soru seni güçlendirir.","Odaklandığın yerde gelişim başlar.","Bugünkü emek yarının rahatlığıdır.","Telefonu bırak, hedefe bak."];function changeQuote(){document.getElementById("quoteBox").textContent=quotes[Math.floor(Math.random()*quotes.length)];}
 function saveGoal(){const val=document.getElementById("goalInput").value.trim();if(val){localStorage.setItem("sezrGoal",val);document.getElementById("quoteBox").textContent="Bugünkü hedef: "+val;}}
-document.getElementById("goalInput").value=localStorage.getItem("sezrGoal")||"";
-if(localStorage.getItem("sezrGoal")) document.getElementById("quoteBox").textContent="Bugünkü hedef: "+localStorage.getItem("sezrGoal");
+let tasks=JSON.parse(localStorage.getItem("sezrTasks")||"[]");function renderTasks(){const list=document.getElementById("taskList");list.innerHTML="";tasks.forEach((t,i)=>{const div=document.createElement("div");div.className="task "+(t.done?"done":"");div.innerHTML=`<input type="checkbox" ${t.done?"checked":""} onchange="toggleTask(${i})"><span>${t.text}</span><button onclick="deleteTask(${i})">Sil</button>`;list.appendChild(div);});}
+function addTask(){const input=document.getElementById("taskInput");const text=input.value.trim();if(!text)return;tasks.push({text,done:false});input.value="";localStorage.setItem("sezrTasks",JSON.stringify(tasks));renderTasks();}
+function toggleTask(i){tasks[i].done=!tasks[i].done;localStorage.setItem("sezrTasks",JSON.stringify(tasks));renderTasks();}
+function deleteTask(i){tasks.splice(i,1);localStorage.setItem("sezrTasks",JSON.stringify(tasks));renderTasks();}
+let sessions=JSON.parse(localStorage.getItem("sezrSessions")||"[]");function addSession(){const now=new Date();sessions.unshift(now.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})+" • "+Math.round(total/60)+" dk focus");sessions=sessions.slice(0,5);localStorage.setItem("sezrSessions",JSON.stringify(sessions));renderSessions();}
+function renderSessions(){const list=document.getElementById("sessionList");list.innerHTML="";if(sessions.length===0){list.innerHTML='<div class="session-item">Henüz seans yok. İlk pomodoronu başlat.</div>';return;}sessions.forEach(s=>{const div=document.createElement("div");div.className="session-item";div.textContent=s;list.appendChild(div);});}
+function toggleClean(){document.body.classList.toggle("clean-mode");}
+document.getElementById("goalInput").value=localStorage.getItem("sezrGoal")||"";if(localStorage.getItem("sezrGoal")) document.getElementById("quoteBox").textContent="Bugünkü hedef: "+localStorage.getItem("sezrGoal");
 document.getElementById("fullscreenBtn").addEventListener("click",()=>{if(!document.fullscreenElement){document.documentElement.requestFullscreen();}else{document.exitFullscreen();}});
 window.addEventListener("keydown",e=>{if(e.code==="Space"){e.preventDefault();running?pauseTimer():startTimer();}});
-updateDisplay();
+renderTasks();renderSessions();updateDisplay();
 </script>
-</body>
-</html>
+</body></html>
