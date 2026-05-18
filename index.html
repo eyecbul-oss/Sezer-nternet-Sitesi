@@ -1,24 +1,673 @@
-<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SezR Matematik | Ana Sayfa</title><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" href="favicon.png"><meta name="theme-color" content="#020617">
-<meta property="og:title" content="SezR Matematik | Yaz Dersleri"><meta property="og:description" content="Matematikte eksiklerini kapat, yeni döneme güçlü başla."><meta property="og:type" content="website">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="premium-upgrade.css"><link rel="stylesheet" href="premium-fix.css"></head><body><div class="container"><header class="topbar"><div class="logo">Sez<span>R</span> Matematik</div><nav class="nav"><a class="active" href="index.html">Ana Sayfa</a><a class="" href="dersler.html">Derslerim</a><a class="" href="youtube.html">YouTube</a><a class="" href="pdf.html">PDF</a><a class="" href="focus.html">Focus</a><a class="" href="iletisim.html">Kayıt</a></nav></header>
-<section class="hero page-hero">
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SezR Matematik | Ana Sayfa</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="theme-color" content="#020617">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<style>
+/* ===============================
+   SEZR ANA SAYFA TAM DÜZELTİLMİŞ
+   Tek dosya index düzeltmesi
+================================ */
+
+body{
+  background:#020617!important;
+  color:white!important;
+}
+
+body::before{
+  content:""!important;
+  position:fixed!important;
+  inset:0!important;
+  z-index:-5!important;
+  background:
+    radial-gradient(circle at 12% 10%,rgba(56,189,248,.24),transparent 32%),
+    radial-gradient(circle at 85% 18%,rgba(250,204,21,.18),transparent 30%),
+    radial-gradient(circle at 50% 105%,rgba(167,139,250,.16),transparent 34%),
+    linear-gradient(135deg,#020617,#07111f 45%,#111827)!important;
+}
+
+body::after{
+  content:""!important;
+  position:fixed!important;
+  inset:0!important;
+  z-index:-4!important;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px)!important;
+  background-size:44px 44px!important;
+  opacity:.22!important;
+}
+
+.sezr-particles{
+  position:fixed;
+  inset:0;
+  z-index:-3;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.sezr-particle{
+  position:absolute;
+  font-family:Montserrat,Inter,sans-serif;
+  font-weight:900;
+  color:rgba(255,255,255,.075);
+  text-shadow:0 0 22px rgba(56,189,248,.18);
+  animation:sezrFloat var(--dur,15s) ease-in-out infinite;
+}
+
+.sezr-particle.gold{color:rgba(250,204,21,.16)}
+.sezr-particle.blue{color:rgba(56,189,248,.14)}
+.sezr-particle.green{color:rgba(37,211,102,.13)}
+
+@keyframes sezrFloat{
+  0%,100%{transform:translate3d(0,0,0) rotate(0deg);opacity:.32}
+  50%{transform:translate3d(var(--x,30px),var(--y,-45px),0) rotate(var(--r,14deg));opacity:.85}
+}
+
+.container{
+  max-width:1280px!important;
+  position:relative!important;
+  z-index:3!important;
+}
+
+.topbar{
+  background:linear-gradient(90deg,rgba(2,6,23,.94),rgba(2,6,23,.80))!important;
+  backdrop-filter:blur(24px)!important;
+  border:1px solid rgba(250,204,21,.14)!important;
+  box-shadow:0 20px 50px rgba(0,0,0,.30)!important;
+}
+
+.logo span,
+.gold{
+  color:#facc15!important;
+  text-shadow:0 0 25px rgba(250,204,21,.35)!important;
+}
+
+.hero{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 440px!important;
+  gap:44px!important;
+  align-items:center!important;
+  min-height:650px!important;
+  padding:46px!important;
+  border-radius:44px!important;
+  background:
+    linear-gradient(135deg,rgba(56,189,248,.13),rgba(250,204,21,.08),rgba(167,139,250,.10)),
+    rgba(2,6,23,.55)!important;
+  border:1px solid rgba(255,255,255,.14)!important;
+  overflow:hidden!important;
+  position:relative!important;
+  box-shadow:0 30px 80px rgba(0,0,0,.28)!important;
+}
+
+.hero::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(56,189,248,.13),transparent 34%),
+    radial-gradient(circle at 80% 20%,rgba(250,204,21,.13),transparent 34%)!important;
+  pointer-events:none!important;
+}
+
+.hero-copy{
+  position:relative!important;
+  z-index:4!important;
+}
+
+.badge{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  padding:12px 22px!important;
+  border-radius:999px!important;
+  border:2px solid #facc15!important;
+  color:#facc15!important;
+  background:rgba(2,6,23,.70)!important;
+  font-weight:900!important;
+  box-shadow:0 0 28px rgba(250,204,21,.16)!important;
+  margin-bottom:24px!important;
+}
+
+.badge::before{content:"✦"}
+
+h1{
+  font-family:Montserrat,Inter,sans-serif!important;
+  font-size:clamp(42px,5.2vw,72px)!important;
+  line-height:1.03!important;
+  letter-spacing:-1.8px!important;
+  text-transform:uppercase!important;
+  margin-bottom:24px!important;
+  text-shadow:0 20px 55px rgba(0,0,0,.42)!important;
+}
+
+.lead{
+  max-width:710px!important;
+  font-size:clamp(18px,1.6vw,22px)!important;
+  line-height:1.65!important;
+  color:#dbeafe!important;
+}
+
+.actions{
+  display:flex!important;
+  gap:14px!important;
+  flex-wrap:wrap!important;
+  margin-top:28px!important;
+}
+
+.btn{
+  min-height:56px!important;
+  padding:16px 22px!important;
+  border-radius:18px!important;
+  font-weight:900!important;
+  transition:.25s!important;
+}
+
+.btn:hover{
+  transform:translateY(-3px) scale(1.025)!important;
+  filter:brightness(1.08)!important;
+}
+
+.btn.green{
+  background:linear-gradient(180deg,#25d366,#128c4a)!important;
+  box-shadow:0 0 25px rgba(37,211,102,.35)!important;
+}
+
+.btn.red{
+  background:#ff0000!important;
+}
+
+.hero-stats{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+  margin-top:30px!important;
+  max-width:800px!important;
+}
+
+.hero-stats .stat{
+  padding:17px 18px!important;
+  border-radius:22px!important;
+  background:rgba(255,255,255,.085)!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:0 16px 34px rgba(0,0,0,.22)!important;
+  backdrop-filter:blur(14px)!important;
+}
+
+.hero-stats .stat b{
+  display:block!important;
+  font-size:25px!important;
+  line-height:1!important;
+  color:#facc15!important;
+  margin-bottom:8px!important;
+}
+
+.hero-stats .stat span{
+  display:block!important;
+  color:#cbd5e1!important;
+  font-size:13px!important;
+  line-height:1.35!important;
+  font-weight:800!important;
+}
+
+/* SAĞ PROFİL BÖLÜMÜ */
+.hero-visual{
+  position:relative!important;
+  z-index:5!important;
+  min-height:560px!important;
+  display:grid!important;
+  place-items:center!important;
+}
+
+.profile-premium-card{
+  width:390px!important;
+  height:520px!important;
+  border-radius:42px!important;
+  position:relative!important;
+  z-index:10!important;
+  padding:18px!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.06))!important;
+  border:1px solid rgba(255,255,255,.22)!important;
+  box-shadow:0 32px 90px rgba(0,0,0,.42),0 0 45px rgba(56,189,248,.18)!important;
+  backdrop-filter:blur(20px)!important;
+  transform:rotate(1.5deg)!important;
+}
+
+.profile-premium-card::before{
+  content:""!important;
+  position:absolute!important;
+  inset:-18px!important;
+  border-radius:54px!important;
+  background:conic-gradient(from 0deg,transparent,rgba(56,189,248,.75),rgba(250,204,21,.85),rgba(37,211,102,.45),transparent)!important;
+  filter:blur(10px)!important;
+  opacity:.55!important;
+  z-index:-1!important;
+  animation:premiumSpin 18s linear infinite!important;
+}
+
+.profile-premium-card img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center top!important;
+  display:block!important;
+  border-radius:30px!important;
+  border:4px solid rgba(255,255,255,.92)!important;
+  background:#020617!important;
+}
+
+.profile-label{
+  position:absolute!important;
+  left:32px!important;
+  right:32px!important;
+  bottom:32px!important;
+  padding:14px 16px!important;
+  border-radius:20px!important;
+  background:rgba(2,6,23,.76)!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  backdrop-filter:blur(14px)!important;
+  box-shadow:0 14px 30px rgba(0,0,0,.28)!important;
+}
+
+.profile-label strong{
+  display:block!important;
+  font-family:Montserrat,Inter,sans-serif!important;
+  font-size:18px!important;
+}
+
+.profile-label span{
+  display:block!important;
+  margin-top:5px!important;
+  color:#cbd5e1!important;
+  font-size:13px!important;
+}
+
+/* SAĞDAKİ AÇIKLAMALAR */
+.hero-notes{
+  position:absolute!important;
+  right:8px!important;
+  top:28px!important;
+  display:grid!important;
+  gap:12px!important;
+  z-index:20!important;
+  width:270px!important;
+}
+
+.hero-note{
+  padding:13px 15px!important;
+  border-radius:18px!important;
+  background:rgba(2,6,23,.82)!important;
+  border:1px solid rgba(255,255,255,.14)!important;
+  backdrop-filter:blur(16px)!important;
+  box-shadow:0 16px 36px rgba(0,0,0,.32)!important;
+  font-weight:900!important;
+}
+
+.hero-note small{
+  display:block!important;
+  margin-top:4px!important;
+  color:#cbd5e1!important;
+  font-weight:800!important;
+  font-size:13px!important;
+}
+
+@keyframes premiumSpin{
+  to{transform:rotate(360deg)}
+}
+
+/* BÖLÜMLER */
+.section-title{
+  margin-top:54px!important;
+  margin-bottom:24px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:18px!important;
+}
+
+.section-title::after{
+  content:""!important;
+  height:2px!important;
+  flex:1!important;
+  background:linear-gradient(90deg,#facc15,transparent)!important;
+}
+
+.card,
+.premium-mini{
+  min-height:220px!important;
+  padding:30px!important;
+  border-radius:30px!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.055))!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:0 18px 42px rgba(0,0,0,.26)!important;
+  backdrop-filter:blur(18px)!important;
+  transition:.32s!important;
+}
+
+.card:hover,
+.premium-mini:hover{
+  transform:translateY(-8px)!important;
+  border-color:rgba(250,204,21,.38)!important;
+  box-shadow:0 26px 60px rgba(0,0,0,.36),0 0 30px rgba(56,189,248,.12)!important;
+}
+
+.card h3,
+.card h2,
+.premium-mini h3{
+  font-family:Montserrat,Inter,sans-serif!important;
+  font-size:clamp(22px,2vw,30px)!important;
+  margin-bottom:14px!important;
+}
+
+.card p,
+.premium-mini p{
+  font-size:17px!important;
+  line-height:1.72!important;
+  color:#dbeafe!important;
+}
+
+.premium-mini-grid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:20px!important;
+  margin-top:22px!important;
+}
+
+.footer{
+  background:linear-gradient(180deg,rgba(2,6,23,.95),rgba(15,23,42,.92))!important;
+  border:1px solid rgba(250,204,21,.12)!important;
+}
+
+/* WHATSAPP */
+.sezr-wa-float{
+  position:fixed!important;
+  right:22px!important;
+  bottom:22px!important;
+  top:auto!important;
+  z-index:999!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  text-decoration:none!important;
+  color:white!important;
+  background:linear-gradient(180deg,#25d366,#128c4a)!important;
+  padding:14px 22px!important;
+  border-radius:999px!important;
+  font-weight:900!important;
+  box-shadow:0 10px 40px rgba(37,211,102,.45)!important;
+  animation:waFloat 2.8s ease-in-out infinite!important;
+}
+
+.sezr-wa-float span{
+  font-size:22px!important;
+}
+
+@keyframes waFloat{
+  50%{transform:translateY(-6px) scale(1.03)}
+}
+
+/* MOBİL */
+@media(max-width:980px){
+  .container{
+    padding:16px 12px 90px!important;
+  }
+
+  .topbar{
+    position:relative!important;
+    top:0!important;
+    flex-direction:column!important;
+  }
+
+  .hero{
+    grid-template-columns:1fr!important;
+    text-align:center!important;
+    padding:28px 20px!important;
+    min-height:auto!important;
+    border-radius:28px!important;
+  }
+
+  .hero-copy{
+    order:1!important;
+  }
+
+  .hero-visual{
+    order:2!important;
+    min-height:430px!important;
+  }
+
+  .profile-premium-card{
+    width:min(300px,85vw)!important;
+    height:420px!important;
+    transform:none!important;
+  }
+
+  .hero-notes{
+    display:none!important;
+  }
+
+  .actions{
+    justify-content:center!important;
+  }
+
+  .hero-stats,
+  .premium-mini-grid,
+  .grid.three,
+  .grid.two{
+    grid-template-columns:1fr!important;
+  }
+
+  .card,
+  .premium-mini{
+    min-height:auto!important;
+  }
+
+  .sezr-wa-float{
+    right:14px!important;
+    bottom:76px!important;
+    padding:12px 16px!important;
+  }
+
+  .sezr-wa-float b{
+    display:none!important;
+  }
+}
+
+@media(max-width:560px){
+  h1{
+    font-size:35px!important;
+  }
+
+  .lead{
+    font-size:16.5px!important;
+  }
+
+  .profile-premium-card{
+    width:min(270px,84vw)!important;
+    height:380px!important;
+  }
+
+  .hero-stats .stat{
+    text-align:left!important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sezr-particles" id="sezrParticles"></div>
+
+<div class="container">
+
+<header class="topbar">
+<div class="logo">Sez<span>R</span> Matematik</div>
+<nav class="nav">
+<a class="active" href="index.html">Ana Sayfa</a>
+<a href="dersler.html">Derslerim</a>
+<a href="youtube.html">YouTube</a>
+<a href="pdf.html">PDF</a>
+<a href="focus.html">Focus</a>
+<a href="iletisim.html">Kayıt</a>
+</nav>
+</header>
+
+<section class="hero">
+
 <div class="hero-copy">
 <div class="badge">2026 YAZ DÖNEMİ KAYITLARI</div>
-<h1>Matematikte Eksiklerini Kapat. <span class="gold">Yeni Döneme Güçlü Başla!</span></h1>
-<p class="lead">SezR Matematik; öğrencinin eksiklerini tespit eden, seviyesine göre ilerleyen ve yeni nesil sorularda özgüven kazandıran özel bir matematik çalışma sistemidir.</p>
-<div class="actions"><a class="btn green" href="https://wa.me/905058266949?text=Merhaba%20SezR%20Matematik%20dersleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum">WhatsApp’tan Bilgi Al</a><a class="btn" href="dersler.html">Dersleri İncele</a><a class="btn red" href="youtube.html">Video Dersler</a></div>
-<div class="hero-stats"><div class="stat"><b>1:1</b><span>Öğrenciye özel yol haritası</span></div><div class="stat"><b>PDF</b><span>Konu föyü, ödev ve tekrar desteği</span></div><div class="stat"><b>2026</b><span>Yeni dönem ve yaz kampı hazırlığı</span></div></div>
+
+<h1>
+Matematikte Eksiklerini Kapat.
+<span class="gold">Yeni Döneme Güçlü Başla!</span>
+</h1>
+
+<p class="lead">
+SezR Matematik; öğrencinin eksiklerini tespit eden, seviyesine göre ilerleyen ve yeni nesil sorularda özgüven kazandıran özel bir matematik çalışma sistemidir.
+</p>
+
+<div class="actions">
+<a class="btn green" href="https://wa.me/905058266949?text=Merhaba%20SezR%20Matematik%20dersleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum">WhatsApp’tan Bilgi Al</a>
+<a class="btn" href="dersler.html">Dersleri İncele</a>
+<a class="btn red" href="youtube.html">Video Dersler</a>
 </div>
+
+<div class="hero-stats">
+<div class="stat"><b>1:1</b><span>Öğrenciye özel yol haritası</span></div>
+<div class="stat"><b>PDF</b><span>Konu föyü, ödev ve tekrar desteği</span></div>
+<div class="stat"><b>2026</b><span>Yeni dönem ve yaz kampı hazırlığı</span></div>
+</div>
+</div>
+
 <div class="hero-visual">
-<div class="float-card one">Maarif Modeli<small>uyumlu çalışma</small></div>
-<div class="float-card two">Problemler Paketi<small>strateji + pratik</small></div>
-<div class="float-card three">limit • türev • integral</div>
-<div class="profile-wrap"><img src="profil.jpg" alt="SezR Matematik"></div>
+
+<div class="hero-notes">
+<div class="hero-note">Maarif Modeli <small>uyumlu çalışma</small></div>
+<div class="hero-note">Problemler Paketi <small>strateji + pratik</small></div>
+<div class="hero-note">Limit • Türev • İntegral</div>
+</div>
+
+<div class="profile-premium-card">
+<img src="profil.jpg?v=16" alt="SezR Matematik">
+<div class="profile-label">
+<strong>SezR Matematik</strong>
+<span>Yeni nesil matematik sistemi</span>
+</div>
+</div>
+
+</div>
+
+</section>
+
+<section>
+<h2 class="section-title">Neden SezR Matematik?</h2>
+
+<div class="grid three">
+<div class="card">
+<h3>🎯 Eksik Analizi</h3>
+<p>Öğrencinin hangi konuda zorlandığı belirlenir. Dersler, rastgele konu anlatımı yerine doğrudan ihtiyaca göre planlanır.</p>
+</div>
+
+<div class="card">
+<h3>📚 Ders + PDF Sistemi</h3>
+<p>Konu anlatımı, örnek soru, ödev föyü ve tekrar içerikleri birlikte ilerler. Böylece öğrenme derste kalmaz, evde de devam eder.</p>
+</div>
+
+<div class="card">
+<h3>🔥 Büyük Dertler</h3>
+<p>Limit, türev, integral ve trigonometri gibi öğrencilerin gözünde büyüyen konular parçalara ayrılarak anlaşılır hâle getirilir.</p>
+</div>
 </div>
 </section>
-<section><h2 class="section-title">Neden SezR Matematik?</h2><div class="grid three"><div class="card"><h3>🎯 Eksik Analizi</h3><p>Öğrencinin hangi konuda zorlandığı belirlenir. Dersler, rastgele konu anlatımı yerine doğrudan ihtiyaca göre planlanır.</p></div><div class="card"><h3>📚 Ders + PDF Sistemi</h3><p>Konu anlatımı, örnek soru, ödev föyü ve tekrar içerikleri birlikte ilerler. Böylece öğrenme derste kalmaz, evde de devam eder.</p></div><div class="card"><h3>🔥 Büyük Dertler</h3><p>Limit, türev, integral ve trigonometri gibi öğrencilerin gözünde büyüyen konular parçalara ayrılarak anlaşılır hâle getirilir.</p></div></div></section>
-<section><h2 class="section-title">Çalışma Sistemi</h2><div class="premium-mini-grid"><div class="premium-mini"><h3>1. Seviye Belirleme</h3><p>Öğrencinin eksikleri, hedefi ve mevcut sınıf düzeyi analiz edilir. İlk adımda neye ihtiyacı olduğu netleşir.</p></div><div class="premium-mini"><h3>2. Konu + Soru</h3><p>Konu mantığı sade şekilde anlatılır, ardından klasik ve yeni nesil sorularla öğrenme güçlendirilir.</p></div><div class="premium-mini"><h3>3. Takip + Tekrar</h3><p>PDF, video, ödev ve Focus Room desteğiyle düzenli tekrar yapılır. Amaç geçici değil kalıcı başarıdır.</p></div></div></section>
-<section><h2 class="section-title">Kimler İçin Uygun?</h2><div class="grid three"><div class="card"><h3>9 ve 10. Sınıflar</h3><p>Temel eksikleri kapatmak, yeni dönem konularına güçlü başlamak ve Maarif Modeli’ne uyum sağlamak isteyen öğrenciler için.</p></div><div class="card"><h3>11’den 12’ye Geçenler</h3><p>TYT-AYT sürecine girmeden önce limit, türev, integral ve trigonometri gibi kritik konuları toparlamak isteyenler için.</p></div><div class="card"><h3>Problemler Zor Diyenler</h3><p>Soru tipini tanıma, verilenleri yorumlama ve çözüm stratejisi kurma konusunda zorlanan öğrenciler için özel paket.</p></div></div></section>
-<footer class="footer">SezR Matematik Sistemi © 2026</footer></div><nav class="quick"><a class="active" href="index.html"><span>🏠</span>Ana</a><a class="" href="dersler.html"><span>📖</span>Ders</a><a class="" href="youtube.html"><span>▶️</span>Video</a><a class="" href="focus.html"><span>🎧</span>Focus</a><a class="" href="iletisim.html"><span>🟢</span>Kayıt</a></nav><script src="app.js"></script><script src="premium-upgrade.js"></script><script src="premium-fix.js"></script></body></html>
+
+<section>
+<h2 class="section-title">Çalışma Sistemi</h2>
+
+<div class="premium-mini-grid">
+<div class="premium-mini">
+<h3>1. Seviye Belirleme</h3>
+<p>Öğrencinin eksikleri, hedefi ve mevcut sınıf düzeyi analiz edilir. İlk adımda neye ihtiyacı olduğu netleşir.</p>
+</div>
+
+<div class="premium-mini">
+<h3>2. Konu + Soru</h3>
+<p>Konu mantığı sade şekilde anlatılır, ardından klasik ve yeni nesil sorularla öğrenme güçlendirilir.</p>
+</div>
+
+<div class="premium-mini">
+<h3>3. Takip + Tekrar</h3>
+<p>PDF, video, ödev ve Focus Room desteğiyle düzenli tekrar yapılır. Amaç geçici değil kalıcı başarıdır.</p>
+</div>
+</div>
+</section>
+
+<section>
+<h2 class="section-title">Kimler İçin Uygun?</h2>
+
+<div class="grid three">
+<div class="card">
+<h3>9 ve 10. Sınıflar</h3>
+<p>Temel eksikleri kapatmak, yeni dönem konularına güçlü başlamak ve Maarif Modeli’ne uyum sağlamak isteyen öğrenciler için.</p>
+</div>
+
+<div class="card">
+<h3>11’den 12’ye Geçenler</h3>
+<p>TYT-AYT sürecine girmeden önce limit, türev, integral ve trigonometri gibi kritik konuları toparlamak isteyenler için.</p>
+</div>
+
+<div class="card">
+<h3>Problemler Zor Diyenler</h3>
+<p>Soru tipini tanıma, verilenleri yorumlama ve çözüm stratejisi kurma konusunda zorlanan öğrenciler için özel paket.</p>
+</div>
+</div>
+</section>
+
+<footer class="footer">SezR Matematik Sistemi © 2026</footer>
+</div>
+
+<a class="sezr-wa-float" href="https://wa.me/905058266949?text=Merhaba%20SezR%20Matematik%20dersleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum">
+<span>🟢</span><b>WhatsApp</b>
+</a>
+
+<nav class="quick">
+<a class="active" href="index.html"><span>🏠</span>Ana</a>
+<a href="dersler.html"><span>📖</span>Ders</a>
+<a href="youtube.html"><span>▶️</span>Video</a>
+<a href="focus.html"><span>🎧</span>Focus</a>
+<a href="iletisim.html"><span>🟢</span>Kayıt</a>
+</nav>
+
+<script src="app.js"></script>
+
+<script>
+(function(){
+  const symbols=["∫","π","√","Σ","Δ","f(x)","lim","x²","dy/dx","∞","%","log"];
+  const colors=["gold","blue","green",""];
+  const layer=document.getElementById("sezrParticles");
+
+  for(let i=0;i<32;i++){
+    const s=document.createElement("span");
+    s.className="sezr-particle "+colors[i%colors.length];
+    s.textContent=symbols[i%symbols.length];
+    s.style.left=Math.random()*100+"%";
+    s.style.top=Math.random()*100+"%";
+    s.style.fontSize=(22+Math.random()*58)+"px";
+    s.style.setProperty("--dur",(10+Math.random()*16)+"s");
+    s.style.setProperty("--x",(-45+Math.random()*90)+"px");
+    s.style.setProperty("--y",(-60+Math.random()*90)+"px");
+    s.style.setProperty("--r",(-20+Math.random()*40)+"deg");
+    layer.appendChild(s);
+  }
+})();
+</script>
+
+</body>
+</html>
