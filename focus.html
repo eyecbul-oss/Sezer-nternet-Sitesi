@@ -1,107 +1,11 @@
 <!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SezR Matematik | Focus Room</title><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" href="favicon.png"><meta name="theme-color" content="#020617">
-<meta property="og:title" content="SezR Matematik | Yaz Dersleri"><meta property="og:description" content="Matematikte eksiklerini kapat, yeni döneme güçlü başla."><meta property="og:image" content="https://eyecbul-oss.github.io/matematik-ders/preview.jpg?v=9"><meta property="og:type" content="website">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"></head>
-<body><div class="container"><header class="topbar"><div class="logo">Sez<span>R</span> Matematik</div><nav class="nav"><a class="" href="index.html">Ana Sayfa</a><a class="" href="dersler.html">Derslerim</a><a class="" href="youtube.html">YouTube</a><a class="" href="pdf.html">PDF</a><a class="active" href="focus.html">Focus</a><a class="" href="iletisim.html">Kayıt</a></nav></header>
-<section class="focus-studio-hero">
-  <span class="focus-studio-badge">SEZR FOCUS ROOM</span>
-  <h1>Odak Modunu Seç ve Çalışmaya Başla</h1>
-  <p>Önce çalışma süreni belirle, sonra atmosfer ve müziği seç. Başlat dediğinde sayaç ve müzik birlikte çalışır.</p>
-</section>
-
-<section class="focus-clean-layout">
-  <div class="focus-stage-card">
-    <div class="focus-stage-top">
-      <div>
-        <strong id="focusModeTitle">Loş Masa</strong>
-        <span id="focusNowPlaying">Piyano çalışma atmosferi hazır</span>
-      </div>
-      <button class="focus-fullscreen-btn" id="focusFullscreenBtn" type="button">⛶ Tam Ekran</button><div class="focus-session-pill" id="focusSessionPill">25 / 5</div>
-    </div>
-
-    <div class="focus-stage-screen" id="focusMainScreen">
-      <iframe id="focusVideoFrame" title="Focus Video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-      <div class="focus-visual-layer bg-desk" id="focusVisualLayer">
-        <div class="focus-window-rain" id="focusWindowRain"></div>
-        
-        <div class="focus-quote" id="focusQuote">Bir soru daha çöz.</div>
-      </div>
-    </div>
-  </div>
-
-  <aside class="focus-control-studio focus-clean-panel">
-    <div class="focus-timer-card">
-      <div class="focus-timer-ring" id="focusTimerRing">
-        <div class="focus-timer-value" id="focusTimer">25:00</div>
-        <div class="focus-timer-status" id="focusStatus">Odak modu hazır</div>
-      </div>
-
-      <div class="focus-main-actions">
-        <button class="studio-btn primary" id="focusStart">Başlat</button>
-        <button class="studio-btn" id="focusPause">Duraklat</button>
-        <button class="studio-btn danger" id="focusReset">Sıfırla</button>
-      </div>
-    </div>
-
-    <div class="focus-option-card">
-      <h3>⏱ Çalışma Süresi</h3>
-      <div class="focus-choice-grid">
-        <button class="focus-choice active" data-work="25" data-break="5">25 / 5</button>
-        <button class="focus-choice" data-work="35" data-break="10">35 / 10</button>
-        <button class="focus-choice" data-work="45" data-break="15">45 / 15</button>
-        <button class="focus-choice" data-work="50" data-break="10">50 / 10</button>
-      </div>
-    </div>
-
-    <div class="focus-option-card">
-      <h3>🎯 Sayaç Görünümü</h3>
-      <div class="focus-choice-grid">
-        <button class="focus-view-choice active" data-view="circle">Daire</button>
-        <button class="focus-view-choice" data-view="compact">Kompakt</button>
-        <button class="focus-view-choice" data-view="large">Büyük</button>
-        <button class="focus-view-choice" data-view="clean">Sade</button>
-      </div>
-    </div>
-  </aside>
-</section>
-
-<section class="focus-preset-section">
-  <div class="focus-library-title">
-    <h2>Atmosfer ve Müzik Seçimi</h2>
-    <p>Her kart görsel atmosferi ve müziği birlikte ayarlar. İstersen sadece sessiz çalışma modunu seçebilirsin.</p>
-  </div>
-
-  <div class="focus-mode-cards focus-preset-cards">
-    <button class="focus-mode-card active" data-title="Loş Masa" data-bg="desk" data-img="focus-desk.png" data-work="" data-break="" data-audio="focus-piano.mp3" data-sound="piano">
-      <span>☕</span><strong>Loş Masa + Piyano</strong><small>Sakin çalışma atmosferi</small>
-    </button>
-    <button class="focus-mode-card" data-title="Yağmurlu Focus" data-bg="rain" data-img="focus-rain.png" data-work="" data-break="" data-audio="focus-relax.mp3" data-sound="rain">
-      <span>🌧</span><strong>Yağmurlu + Relax</strong><small>Pencerede yağmur efekti</small>
-    </button>
-    <button class="focus-mode-card" data-title="Uzay Modu" data-bg="space" data-img="focus-space.png" data-work="" data-break="" data-audio="focus-piano.mp3" data-sound="piano">
-      <span>🚀</span><strong>Uzay + Piyano</strong><small>Derin odak çalışması</small>
-    </button>
-    <button class="focus-mode-card" data-title="Minimal" data-bg="minimal" data-img="focus-minimal.png" data-work="" data-break="" data-audio="" data-sound="silent">
-      <span>🧘</span><strong>Minimal + Sessiz</strong><small>Sade ve sessiz çalışma</small>
-    </button>
-  </div>
-</section>
-
-<section class="focus-youtube-card">
-  <div>
-    <h2>YouTube Focus</h2>
-    <p>İstersen kendi focus videonu da çalışma ekranında açabilirsin.</p>
-  </div>
-  <div class="focus-input-row">
-    <input id="focusVideoUrl" placeholder="İsteğe bağlı YouTube video linki">
-    <button id="focusSave">Aç</button>
-  </div>
-</section>
-
-<audio id="focusAudio" preload="auto"></audio><audio id="focusAudioWarmup" preload="auto" muted></audio>
-<footer class="footer">SezR Matematik Sistemi © 2026</footer></div><nav class="quick">
-<a class="" href="index.html"><span>🏠</span>Ana</a>
-<a class="" href="dersler.html"><span>📖</span>Ders</a>
-<a class="" href="youtube.html"><span>▶️</span>Video</a>
-<a class="active" href="focus.html"><span>🎧</span>Focus</a>
-<a class="" href="iletisim.html"><span>🟢</span>Kayıt</a></nav><script src="app.js"></script></body></html>
+<meta property="og:title" content="SezR Matematik | Yaz Dersleri"><meta property="og:description" content="Matematikte eksiklerini kapat, yeni döneme güçlü başla."><meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="premium-upgrade.css"></head><body><div class="container"><header class="topbar"><div class="logo">Sez<span>R</span> Matematik</div><nav class="nav"><a class="" href="index.html">Ana Sayfa</a><a class="" href="dersler.html">Derslerim</a><a class="" href="youtube.html">YouTube</a><a class="" href="pdf.html">PDF</a><a class="active" href="focus.html">Focus</a><a class="" href="iletisim.html">Kayıt</a></nav></header>
+<section class="page-hero"><span class="page-badge">SEZR FOCUS ROOM</span><h1>Odak Modunu Seç ve Çalışmaya Başla</h1><p class="lead">Çalışma süreni belirle, atmosfer ve müziği seç. Başlat dediğinde sayaç ve müzik birlikte çalışır.</p></section>
+<section class="focus-clean-layout"><div class="focus-stage-card"><div class="focus-stage-top"><div><strong id="focusModeTitle">Loş Masa</strong><span id="focusNowPlaying">Piyano çalışma atmosferi hazır</span></div><button class="focus-fullscreen-btn" id="focusFullscreenBtn" type="button">⛶ Tam Ekran</button><div class="focus-session-pill" id="focusSessionPill">25 / 5</div></div><div class="focus-stage-screen" id="focusMainScreen"><iframe id="focusVideoFrame" title="Focus Video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><div class="focus-visual-layer bg-desk" id="focusVisualLayer"><div class="focus-window-rain" id="focusWindowRain"></div><div class="focus-quote" id="focusQuote">Bir soru daha çöz.</div></div></div></div>
+<aside class="focus-control-studio focus-clean-panel"><div class="focus-timer-card"><div class="focus-timer-ring" id="focusTimerRing"><div class="focus-timer-value" id="focusTimer">25:00</div><div class="focus-timer-status" id="focusStatus">Odak modu hazır</div></div><div class="focus-main-actions"><button class="studio-btn primary" id="focusStart">Başlat</button><button class="studio-btn" id="focusPause">Duraklat</button><button class="studio-btn danger" id="focusReset">Sıfırla</button></div></div><div class="focus-option-card"><h3>⏱ Çalışma Süresi</h3><div class="focus-choice-grid"><button class="focus-choice active" data-work="25" data-break="5">25 / 5</button><button class="focus-choice" data-work="35" data-break="10">35 / 10</button><button class="focus-choice" data-work="45" data-break="15">45 / 15</button><button class="focus-choice" data-work="50" data-break="10">50 / 10</button></div></div><div class="focus-option-card"><h3>🎯 Sayaç Görünümü</h3><div class="focus-choice-grid"><button class="focus-view-choice active" data-view="circle">Daire</button><button class="focus-view-choice" data-view="compact">Kompakt</button><button class="focus-view-choice" data-view="large">Büyük</button><button class="focus-view-choice" data-view="clean">Sade</button></div></div></aside></section>
+<section class="focus-preset-section"><div class="focus-library-title"><h2>Atmosfer ve Müzik Seçimi</h2><p>Her kart görsel atmosferi ve müziği birlikte ayarlar.</p></div><div class="focus-mode-cards focus-preset-cards"><button class="focus-mode-card active" data-title="Loş Masa" data-bg="desk" data-img="focus-desk.png" data-audio="focus-piano.mp3" data-sound="piano"><span>☕</span><strong>Loş Masa + Piyano</strong><small>Sakin çalışma atmosferi</small></button><button class="focus-mode-card" data-title="Yağmurlu Focus" data-bg="rain" data-img="focus-rain.png" data-audio="focus-relax.mp3" data-sound="rain"><span>🌧</span><strong>Yağmurlu + Relax</strong><small>Pencerede yağmur efekti</small></button><button class="focus-mode-card" data-title="Uzay Modu" data-bg="space" data-img="focus-space.png" data-audio="focus-piano.mp3" data-sound="piano"><span>🚀</span><strong>Uzay + Piyano</strong><small>Derin odak çalışması</small></button><button class="focus-mode-card" data-title="Minimal" data-bg="minimal" data-img="focus-minimal.png" data-audio="" data-sound="silent"><span>🧘</span><strong>Minimal + Sessiz</strong><small>Sade ve sessiz çalışma</small></button></div></section>
+<section class="focus-youtube-card"><div><h2>YouTube Focus</h2><p>İstersen kendi focus videonu da çalışma ekranında açabilirsin.</p></div><div class="focus-input-row"><input id="focusVideoUrl" placeholder="İsteğe bağlı YouTube video linki"><button id="focusSave">Aç</button></div></section><audio id="focusAudio" preload="auto"></audio><audio id="focusAudioWarmup" preload="auto" muted></audio>
+<footer class="footer">SezR Matematik Sistemi © 2026</footer></div><nav class="quick"><a class="" href="index.html"><span>🏠</span>Ana</a><a class="" href="dersler.html"><span>📖</span>Ders</a><a class="" href="youtube.html"><span>▶️</span>Video</a><a class="active" href="focus.html"><span>🎧</span>Focus</a><a class="" href="iletisim.html"><span>🟢</span>Kayıt</a></nav><script src="app.js"></script><script src="premium-upgrade.js"></script></body></html>
