@@ -1,11 +1,425 @@
-<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SezR Matematik | Focus Room</title><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" href="favicon.png"><meta name="theme-color" content="#020617">
-<meta property="og:title" content="SezR Matematik | Yaz Dersleri"><meta property="og:description" content="Matematikte eksiklerini kapat, yeni döneme güçlü başla."><meta property="og:type" content="website">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="premium-upgrade.css"></head><body><div class="container"><header class="topbar"><div class="logo">Sez<span>R</span> Matematik</div><nav class="nav"><a class="" href="index.html">Ana Sayfa</a><a class="" href="dersler.html">Derslerim</a><a class="" href="youtube.html">YouTube</a><a class="" href="pdf.html">PDF</a><a class="active" href="focus.html">Focus</a><a class="" href="iletisim.html">Kayıt</a></nav></header>
-<section class="page-hero"><span class="page-badge">SEZR FOCUS ROOM</span><h1>Odak Modunu Seç ve Çalışmaya Başla</h1><p class="lead">Çalışma süreni belirle, atmosfer ve müziği seç. Başlat dediğinde sayaç ve müzik birlikte çalışır.</p></section>
-<section class="focus-clean-layout"><div class="focus-stage-card"><div class="focus-stage-top"><div><strong id="focusModeTitle">Loş Masa</strong><span id="focusNowPlaying">Piyano çalışma atmosferi hazır</span></div><button class="focus-fullscreen-btn" id="focusFullscreenBtn" type="button">⛶ Tam Ekran</button><div class="focus-session-pill" id="focusSessionPill">25 / 5</div></div><div class="focus-stage-screen" id="focusMainScreen"><iframe id="focusVideoFrame" title="Focus Video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><div class="focus-visual-layer bg-desk" id="focusVisualLayer"><div class="focus-window-rain" id="focusWindowRain"></div><div class="focus-quote" id="focusQuote">Bir soru daha çöz.</div></div></div></div>
-<aside class="focus-control-studio focus-clean-panel"><div class="focus-timer-card"><div class="focus-timer-ring" id="focusTimerRing"><div class="focus-timer-value" id="focusTimer">25:00</div><div class="focus-timer-status" id="focusStatus">Odak modu hazır</div></div><div class="focus-main-actions"><button class="studio-btn primary" id="focusStart">Başlat</button><button class="studio-btn" id="focusPause">Duraklat</button><button class="studio-btn danger" id="focusReset">Sıfırla</button></div></div><div class="focus-option-card"><h3>⏱ Çalışma Süresi</h3><div class="focus-choice-grid"><button class="focus-choice active" data-work="25" data-break="5">25 / 5</button><button class="focus-choice" data-work="35" data-break="10">35 / 10</button><button class="focus-choice" data-work="45" data-break="15">45 / 15</button><button class="focus-choice" data-work="50" data-break="10">50 / 10</button></div></div><div class="focus-option-card"><h3>🎯 Sayaç Görünümü</h3><div class="focus-choice-grid"><button class="focus-view-choice active" data-view="circle">Daire</button><button class="focus-view-choice" data-view="compact">Kompakt</button><button class="focus-view-choice" data-view="large">Büyük</button><button class="focus-view-choice" data-view="clean">Sade</button></div></div></aside></section>
-<section class="focus-preset-section"><div class="focus-library-title"><h2>Atmosfer ve Müzik Seçimi</h2><p>Her kart görsel atmosferi ve müziği birlikte ayarlar.</p></div><div class="focus-mode-cards focus-preset-cards"><button class="focus-mode-card active" data-title="Loş Masa" data-bg="desk" data-img="focus-desk.png" data-audio="focus-piano.mp3" data-sound="piano"><span>☕</span><strong>Loş Masa + Piyano</strong><small>Sakin çalışma atmosferi</small></button><button class="focus-mode-card" data-title="Yağmurlu Focus" data-bg="rain" data-img="focus-rain.png" data-audio="focus-relax.mp3" data-sound="rain"><span>🌧</span><strong>Yağmurlu + Relax</strong><small>Pencerede yağmur efekti</small></button><button class="focus-mode-card" data-title="Uzay Modu" data-bg="space" data-img="focus-space.png" data-audio="focus-piano.mp3" data-sound="piano"><span>🚀</span><strong>Uzay + Piyano</strong><small>Derin odak çalışması</small></button><button class="focus-mode-card" data-title="Minimal" data-bg="minimal" data-img="focus-minimal.png" data-audio="" data-sound="silent"><span>🧘</span><strong>Minimal + Sessiz</strong><small>Sade ve sessiz çalışma</small></button></div></section>
-<section class="focus-youtube-card"><div><h2>YouTube Focus</h2><p>İstersen kendi focus videonu da çalışma ekranında açabilirsin.</p></div><div class="focus-input-row"><input id="focusVideoUrl" placeholder="İsteğe bağlı YouTube video linki"><button id="focusSave">Aç</button></div></section><audio id="focusAudio" preload="auto"></audio><audio id="focusAudioWarmup" preload="auto" muted></audio>
-<footer class="footer">SezR Matematik Sistemi © 2026</footer></div><nav class="quick"><a class="" href="index.html"><span>🏠</span>Ana</a><a class="" href="dersler.html"><span>📖</span>Ders</a><a class="" href="youtube.html"><span>▶️</span>Video</a><a class="active" href="focus.html"><span>🎧</span>Focus</a><a class="" href="iletisim.html"><span>🟢</span>Kayıt</a></nav><script src="app.js"></script><script src="premium-upgrade.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SezR Focus Room</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:Inter,sans-serif;
+background:#020617;
+color:white;
+overflow-x:hidden;
+min-height:100vh;
+position:relative;
+}
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:
+radial-gradient(circle at 20% 20%,rgba(56,189,248,.22),transparent 35%),
+radial-gradient(circle at 80% 20%,rgba(250,204,21,.14),transparent 30%),
+linear-gradient(135deg,#020617,#07111f 45%,#111827);
+z-index:-5;
+}
+.grid-bg{
+position:fixed;
+inset:0;
+background-image:
+linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+background-size:40px 40px;
+opacity:.2;
+z-index:-4;
+}
+.symbols{
+position:fixed;
+inset:0;
+pointer-events:none;
+overflow:hidden;
+z-index:-3;
+}
+.symbol{
+position:absolute;
+font-weight:900;
+font-family:Montserrat;
+opacity:.08;
+animation:float 18s ease-in-out infinite;
+}
+@keyframes float{
+0%,100%{transform:translateY(0px) rotate(0deg)}
+50%{transform:translateY(-35px) rotate(8deg)}
+}
+.container{
+max-width:1300px;
+margin:auto;
+padding:24px;
+}
+.hero{
+display:grid;
+grid-template-columns:1fr 430px;
+gap:40px;
+align-items:center;
+min-height:100vh;
+}
+.badge{
+display:inline-flex;
+align-items:center;
+gap:8px;
+padding:12px 18px;
+border-radius:999px;
+background:rgba(250,204,21,.12);
+border:1px solid rgba(250,204,21,.35);
+color:#facc15;
+font-weight:900;
+margin-bottom:22px;
+}
+h1{
+font-family:Montserrat;
+font-size:clamp(46px,7vw,92px);
+line-height:1;
+margin-bottom:24px;
+text-transform:uppercase;
+}
+.gold{
+color:#facc15;
+text-shadow:0 0 35px rgba(250,204,21,.25);
+}
+.lead{
+font-size:20px;
+line-height:1.7;
+max-width:700px;
+color:#dbeafe;
+}
+.actions{
+display:flex;
+gap:14px;
+flex-wrap:wrap;
+margin-top:30px;
+}
+.btn{
+height:58px;
+padding:0 24px;
+border-radius:18px;
+display:flex;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+font-weight:900;
+color:white;
+background:rgba(15,23,42,.85);
+border:1px solid rgba(255,255,255,.14);
+transition:.25s;
+backdrop-filter:blur(10px);
+cursor:pointer;
+}
+.btn:hover{
+transform:translateY(-3px) scale(1.02);
+}
+.btn.green{
+background:linear-gradient(180deg,#25d366,#128c4a);
+box-shadow:0 0 30px rgba(37,211,102,.25);
+}
+.focus-panel{
+position:relative;
+padding:26px;
+border-radius:42px;
+background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.05));
+border:1px solid rgba(255,255,255,.14);
+box-shadow:0 24px 80px rgba(0,0,0,.35);
+backdrop-filter:blur(22px);
+overflow:hidden;
+}
+.focus-panel::before{
+content:"";
+position:absolute;
+inset:-12px;
+border-radius:52px;
+background:conic-gradient(from 0deg,transparent,rgba(56,189,248,.65),rgba(250,204,21,.65),transparent);
+filter:blur(14px);
+opacity:.4;
+animation:spin 16s linear infinite;
+z-index:-1;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.timer-wrap{
+position:relative;
+width:320px;
+height:320px;
+margin:10px auto 24px;
+display:grid;
+place-items:center;
+}
+.timer-ring{
+position:absolute;
+inset:0;
+border-radius:50%;
+border:10px solid rgba(255,255,255,.08);
+box-shadow:0 0 50px rgba(56,189,248,.12),0 0 120px rgba(250,204,21,.08);
+}
+.timer-ring::before{
+content:"";
+position:absolute;
+inset:-10px;
+border-radius:50%;
+border:8px solid rgba(250,204,21,.35);
+filter:blur(8px);
+animation:pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse{50%{transform:scale(1.03)}}
+#timer{
+font-family:Montserrat;
+font-size:72px;
+font-weight:900;
+letter-spacing:-3px;
+text-shadow:0 0 30px rgba(250,204,21,.18);
+}
+.timer-sub{
+text-align:center;
+color:#cbd5e1;
+font-weight:800;
+margin-top:-10px;
+margin-bottom:20px;
+}
+.control-row{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+}
+.ctrl{
+height:52px;
+border-radius:16px;
+border:1px solid rgba(255,255,255,.14);
+background:rgba(15,23,42,.86);
+color:white;
+font-weight:900;
+cursor:pointer;
+}
+.modes{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+margin-top:16px;
+}
+.mode{
+padding:12px;
+border-radius:16px;
+text-align:center;
+font-weight:900;
+background:rgba(255,255,255,.06);
+border:1px solid rgba(255,255,255,.10);
+cursor:pointer;
+}
+.mode.active{
+background:rgba(250,204,21,.14);
+border-color:rgba(250,204,21,.35);
+color:#facc15;
+}
+.section-title{
+margin:80px 0 24px;
+font-size:34px;
+font-family:Montserrat;
+display:flex;
+align-items:center;
+gap:18px;
+}
+.section-title::after{
+content:"";
+height:2px;
+flex:1;
+background:linear-gradient(90deg,#facc15,transparent);
+}
+.ambient-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+}
+.ambient-card{
+padding:26px;
+border-radius:34px;
+background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05));
+border:1px solid rgba(255,255,255,.14);
+box-shadow:0 18px 42px rgba(0,0,0,.25);
+min-height:220px;
+}
+.ambient-card h3{
+font-size:28px;
+font-family:Montserrat;
+margin-bottom:10px;
+}
+.ambient-card p{
+line-height:1.7;
+color:#dbeafe;
+}
+.stats-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px;
+margin-top:26px;
+}
+.stat-card{
+padding:28px;
+border-radius:32px;
+background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05));
+border:1px solid rgba(255,255,255,.14);
+box-shadow:0 18px 42px rgba(0,0,0,.24);
+}
+.stat-card b{
+display:block;
+font-size:42px;
+font-family:Montserrat;
+color:#facc15;
+margin-bottom:8px;
+}
+.stat-card span{
+color:#dbeafe;
+font-weight:800;
+}
+@media(max-width:980px){
+.hero{grid-template-columns:1fr;text-align:center}
+.actions{justify-content:center}
+.timer-wrap{width:260px;height:260px}
+#timer{font-size:58px}
+.control-row,.modes,.ambient-grid,.stats-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="symbols" id="symbols"></div>
+
+<div class="container">
+
+<section class="hero">
+
+<div>
+<div class="badge">SEZR FOCUS ROOM</div>
+<h1>Telefonu bırak.<br><span class="gold">Dikkatini topla.</span></h1>
+<p class="lead">Çalışma atmosferi, premium pomodoro sistemi, ortam sesleri ve dikkat artırıcı tasarımıyla hazırlanmış ultra focus alanı.</p>
+
+<div class="actions">
+<a class="btn green" href="#timer">Pomodoro Başlat</a>
+<button class="btn" id="fullscreenBtn">Fullscreen Focus</button>
+</div>
+</div>
+
+<div class="focus-panel">
+
+<div class="timer-wrap">
+<div class="timer-ring"></div>
+<div>
+<div id="timer">25:00</div>
+<div class="timer-sub">Focus Modu</div>
+</div>
+</div>
+
+<div class="control-row">
+<button class="ctrl" onclick="startTimer()">Başlat</button>
+<button class="ctrl" onclick="pauseTimer()">Duraklat</button>
+<button class="ctrl" onclick="resetTimer()">Sıfırla</button>
+<button class="ctrl" onclick="toggleSound()">Ses</button>
+</div>
+
+<div class="modes">
+<div class="mode active" onclick="setMode(25,this)">25 / 5</div>
+<div class="mode" onclick="setMode(45,this)">45 / 10</div>
+<div class="mode" onclick="setMode(60,this)">60 / 15</div>
+<div class="mode" onclick="setMode(120,this)">Deep Focus</div>
+</div>
+
+</div>
+
+</section>
+
+<h2 class="section-title">Ortamlar</h2>
+
+<div class="ambient-grid">
+<div class="ambient-card"><h3>🌧 Yağmurlu Gece</h3><p>Loş gece atmosferi ve sakin yağmur sesiyle odaklan.</p></div>
+<div class="ambient-card"><h3>📚 Kütüphane</h3><p>Sessiz çalışma ortamı hissi veren premium focus modu.</p></div>
+<div class="ambient-card"><h3>☕ Lo-fi Cafe</h3><p>Hafif müzikler ve sıcak tonlarla uzun çalışma seansları.</p></div>
+</div>
+
+<h2 class="section-title">Bugünkü İstatistikler</h2>
+
+<div class="stats-grid">
+<div class="stat-card"><b>04</b><span>Tamamlanan Pomodoro</span></div>
+<div class="stat-card"><b>02:10</b><span>Çalışma Süresi</span></div>
+<div class="stat-card"><b>07</b><span>Haftalık Seri</span></div>
+<div class="stat-card"><b>92%</b><span>Focus Puanı</span></div>
+</div>
+
+</div>
+
+<script>
+const symbols=["∫","π","√","Σ","Δ","f(x)","lim","x²","∞"];
+const layer=document.getElementById("symbols");
+for(let i=0;i<24;i++){
+const s=document.createElement("span");
+s.className="symbol";
+s.textContent=symbols[i%symbols.length];
+s.style.left=Math.random()*100+"%";
+s.style.top=Math.random()*100+"%";
+s.style.fontSize=(24+Math.random()*60)+"px";
+s.style.animationDuration=(10+Math.random()*15)+"s";
+layer.appendChild(s);
+}
+let timer;
+let time=1500;
+let running=false;
+function updateDisplay(){
+const min=Math.floor(time/60);
+const sec=time%60;
+document.getElementById("timer").textContent=`${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+function startTimer(){
+if(running)return;
+running=true;
+timer=setInterval(()=>{
+if(time>0){
+time--;
+updateDisplay();
+}else{
+clearInterval(timer);
+running=false;
+alert("Pomodoro tamamlandı! 🔥");
+}
+},1000);
+}
+function pauseTimer(){
+clearInterval(timer);
+running=false;
+}
+function resetTimer(){
+clearInterval(timer);
+running=false;
+time=1500;
+updateDisplay();
+}
+function setMode(min,el){
+document.querySelectorAll('.mode').forEach(m=>m.classList.remove('active'));
+el.classList.add('active');
+time=min*60;
+updateDisplay();
+}
+function toggleSound(){
+alert("Müzik sistemi sonraki sürümde bağlanacak 🎧");
+}
+updateDisplay();
+document.getElementById("fullscreenBtn").addEventListener("click",()=>{
+if(!document.fullscreenElement){
+document.documentElement.requestFullscreen();
+}else{
+document.exitFullscreen();
+}
+});
+</script>
+
+</body>
+</html>
