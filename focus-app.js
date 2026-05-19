@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let saveTimer = null;
   let saveBusy = false;
 
-  function blank(){ return {name:"",email:"",tasks:[],dailyTarget:60,exam:{group:"YKS",type:"TYT",date:"2026-06-20",hidden:false},notes:[],sessions:[],taskHistory:[],totalSeconds:0,totalPomodoros:0,days:{}}; }
+  function blank(){ return {name:"",email:"",tasks:[],dailyTarget:60,exam:{group:"YKS",type:"TYT",date:"2026-06-20",hidden:false},notes:[],taskHistory:[],totalSeconds:0,totalPomodoros:0,days:{}}; }
   function localKey(){ return user ? "sezr_focus_cloud_" + user.uid : "sezr_focus_guest"; }
   function saveLocal(){ localStorage.setItem(localKey(), JSON.stringify(data)); }
   function loadLocal(){ try{return Object.assign(blank(), JSON.parse(localStorage.getItem(localKey()) || "{}"));}catch{return blank();} }
@@ -763,7 +763,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(statusLine){
       statusLine.textContent = total > 0
         ? "Çalışma ritmi aktif."
-        : "Çalışma ritmi için önce birkaç seans tamamla.";
+        : "Çalışma ritmi için biraz veri gerekli.";
     }
   }
 
@@ -912,7 +912,7 @@ document.addEventListener("DOMContentLoaded", () => {
       $("startHint").classList.toggle("hidden", localStorage.getItem("sezr_hide_start_hint") === "1");
     }
 renderNotes();
-    renderSessions();
+
   }
 
   function buildTodaySummary(){
@@ -999,198 +999,4 @@ renderNotes();
     });
   }
 
-  function renderSessions(){
-    const box=$("sessionList"); box.innerHTML="";
-    if(data.sessions.length===0){ box.innerHTML='<div class="list-item">Henüz seans yok.</div>'; return; }
-    data.sessions.slice(0,5).forEach(s=>{
-      const div=document.createElement("div");
-      div.className="list-item";
-      div.textContent=s;
-      box.appendChild(div);
-    });
-  }
-
-  async function addDailyTask(){
-    const input = $("taskInput");
-    const text = input.value.trim();
-    if(!text) return;
-    getTasks().push({text,done:false,createdAt:new Date().toISOString()});
-    data.taskHistory = data.taskHistory || [];
-    data.taskHistory.unshift({
-      text,
-      date:new Date().toLocaleDateString("tr-TR"),
-      time:new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})
-    });
-    data.taskHistory = data.taskHistory.slice(0,12);
-    input.value = "";
-    await saveCloud();
-    render();
-  }
-
-  async function toggleDailyTask(index){
-    const tasks = getTasks();
-    if(!tasks[index]) return;
-    tasks[index].done = !tasks[index].done;
-    await saveCloud();
-    render();
-  }
-
-  async function deleteDailyTask(index){
-    const tasks = getTasks();
-    if(!tasks[index]) return;
-    tasks.splice(index,1);
-    await saveCloud();
-    render();
-  }
-
-  async function clearDoneTasks(){
-    const tasks = getTasks();
-    const doneCount = tasks.filter(t=>t.done).length;
-    if(doneCount === 0) return;
-    data.tasks = tasks.filter(t=>!t.done);
-    await saveCloud();
-    render();
-  }
-
-  async function addExamTask(){
-    getTasks().push({text:latestExamSuggestion || "20 soru çöz ve yanlışlarını işaretle.",done:false,createdAt:new Date().toISOString()});
-    await saveCloud();
-    render();
-  }
-
-  async function clearDailyTasks(){
-    if(getTasks().length === 0) return;
-    if(!confirm("Bugünkü tüm görevler temizlensin mi?")) return;
-    data.tasks = [];
-    await saveCloud();
-    render();
-  }
-
-  async function addNote(){ 
-    const v=$("noteInput").value.trim(); 
-    if(!v) return; 
-    data.notes = (data.notes || []).filter(n => (typeof n === "string" ? n.trim() : (n.text || "").trim()));
-    data.notes.push({text:v,date:new Date().toLocaleDateString("tr-TR"),time:new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})}); 
-    $("noteInput").value=""; 
-    await saveCloud(); 
-    render(); 
-  }
-function exportData(){ const raw=JSON.stringify(data); navigator.clipboard?navigator.clipboard.writeText(raw).then(()=>alert("Yedek kodu kopyalandı.")):prompt("Yedek kodu:",raw); }
-  async function importData(){ const raw=prompt("Yedek kodunu yapıştır:"); if(!raw)return; try{data=Object.assign(blank(),JSON.parse(raw)); await saveCloud(); render(); alert("Yedek yüklendi.");}catch{alert("Yedek okunamadı.");} }
-  async function resetData(){ if(!confirm("Bu hesabın verileri silinsin mi?"))return; data=blank(); data.email=user.email; await saveCloud(); reset(); render(); }
-
-  function ambience(){
-    const rain=$("rainLayer");
-    for(let i=0;i<90;i++){ const d=document.createElement("div"); d.className="drop"; d.style.left=Math.random()*100+"%"; d.style.animationDuration=(.6+Math.random()*.7)+"s"; d.style.animationDelay=Math.random()*2+"s"; rain.appendChild(d); }
-    const syms=["∫","π","√","Σ","Δ","f(x)","lim","x²","∞"], layer=$("symbolLayer");
-    for(let i=0;i<28;i++){ const s=document.createElement("span"); s.className="sym"; s.textContent=syms[i%syms.length]; s.style.left=Math.random()*100+"%"; s.style.top=Math.random()*100+"%"; s.style.fontSize=(24+Math.random()*58)+"px"; s.style.animationDuration=(10+Math.random()*15)+"s"; layer.appendChild(s); }
-  }
-
-  $("loginTab").onclick=()=>setAuthMode("login");
-  $("registerTab").onclick=()=>setAuthMode("register");
-  $("authSubmit").onclick=()=> mode==="login" ? signIn() : register();
-  $("forgotBtn").onclick=forgot;
-  if($("hideHintBtn")) $("hideHintBtn").onclick=()=>{localStorage.setItem("sezr_hide_start_hint","1"); render();};
-  $("guestBtn").onclick=continueGuest;
-  $("mainToggleBtn").onclick=toggle;
-  $("resetBtn").onclick=reset;
-  if($("fullscreenBtn")) $("fullscreenBtn").onclick=enterFullscreenFocus;
-  if($("overlayToggleBtn")) $("overlayToggleBtn").onclick=toggle;
-  if($("overlayResetBtn")) $("overlayResetBtn").onclick=reset;
-  if($("overlayExitBtn")) $("overlayExitBtn").onclick=exitFullscreenFocus;
-  if($("breakStartPauseBtn")) $("breakStartPauseBtn").onclick=toggleBreakTimer;
-  if($("breakFinishBtn")) $("breakFinishBtn").onclick=()=>finishBreakAndResume(true);
-  $("addTaskBtn").onclick=addDailyTask;
-  
-  if($("clearTasksBtn")) $("clearTasksBtn").onclick=clearDailyTasks;
-  if($("clearDoneTasksBtn")) $("clearDoneTasksBtn").onclick=clearDoneTasks;
-  if($("addExamTaskBtn")) $("addExamTaskBtn").onclick=addExamTask;
-  document.querySelectorAll("#dailyTargetOptions button").forEach(btn=>{
-    btn.onclick=()=>changeDailyTarget(btn.dataset.target);
-  });
-  if($("examGroupSelect")) $("examGroupSelect").onchange=changeExamGroup;
-  if($("examTypeSelect")) $("examTypeSelect").onchange=changeExamType;
-  if($("saveExamBtn")) $("saveExamBtn").onclick=saveExamSettings;
-  if($("toggleExamBtn")) $("toggleExamBtn").onclick=toggleExamPanel;
-
-  $("addNoteBtn").onclick=addNote;
-  $("volumeRange").oninput=e=>{ $("focusAudio").volume=e.target.value/100; $("volumeText").textContent="🔊 "+e.target.value+"%"; };
-  $("settingsBtn").onclick=()=>$("settingsPanel").classList.toggle("show");
-  $("closeSettingsBtn").onclick=()=>$("settingsPanel").classList.remove("show");
-  if($("compactModeBtn")) $("compactModeBtn").onclick=toggleCompactMode;
-  $("logoutBtn").onclick=()=>{
-    localStorage.removeItem("sezr_guest_mode");
-    guestMode = false;
-    if(auth && user) auth.signOut();
-    else showAuth();
-  };
-  $("closeModalBtn").onclick=()=>{ $("successModal").classList.remove("show"); reset(); };
-  document.querySelectorAll(".mode").forEach(btn=>btn.onclick=()=>{ document.querySelectorAll(".mode").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); focusSeconds=Number(btn.dataset.min)*60; totalSeconds=focusSeconds; remaining=totalSeconds; reset(); });
-  document.querySelectorAll(".break-btn").forEach(btn=>btn.onclick=()=>startBreak(Number(btn.dataset.break)));
-  document.querySelectorAll(".track").forEach(btn=>btn.onclick=()=>{ const was=isAudioPlaying; pauseAudio(); setTrack(btn.dataset.track); if(was) playAudio(); });
-  document.addEventListener("keydown",e=>{ 
-    const tag=(e.target.tagName||"").toLowerCase(); 
-    if(e.key === "Escape" && $("breakModal") && $("breakModal").classList.contains("show")){ finishBreakAndResume(true); return; }
-    if(e.key === "Escape" && $("focusOverlay") && $("focusOverlay").classList.contains("show")){ exitFullscreenFocus(); return; }
-    if(e.key === "Enter" && e.target && e.target.id === "taskInput"){ e.preventDefault(); addDailyTask(); return; }
-    if(tag==="input"||tag==="textarea")return; 
-    if(e.code==="Space"){e.preventDefault();toggle();} 
-  });
-
-  ["mousemove","touchstart","click"].forEach(evt=>{
-    if($("focusOverlay")) $("focusOverlay").addEventListener(evt, showOverlayControls);
-  });
-  startQuoteLoop();
-
-  document.addEventListener("click", (e) => {
-    const panel = $("settingsPanel");
-    const btn = $("settingsBtn");
-    if(!panel || !btn) return;
-    const isOpen = panel.classList.contains("show");
-    if(!isOpen) return;
-    const clickedInsidePanel = panel.contains(e.target);
-    const clickedSettingsBtn = btn.contains(e.target);
-    if(!clickedInsidePanel && !clickedSettingsBtn){
-      panel.classList.remove("show");
-    }
-  });
-
-  window.addEventListener("beforeunload", () => {
-    saveLocal();
-  });
-
-  if(guestMode){
-    continueGuest();
-  }
-
-  if(auth){
-    auth.onAuthStateChanged(async current=>{
-      if(guestMode) return;
-      user=current;
-      if(user){
-        showApp();
-        try{
-          await loadCloud();
-        }catch(e){
-          console.warn("Cloud load failed:", e);
-          data = loadLocal();
-          data.email = user.email || "";
-          render();
-        }
-      }else{
-        showAuth();
-      }
-    });
-  }else{
-    if(!guestMode) showMessage("Firebase yüklenemedi. Misafir olarak devam edebilirsin.","error");
-  }
-
-  setInterval(()=>{ 
-    if($("examCountdownPanel")) renderExamCountdown(); 
-  }, 1000);
-
-  applyCompactMode();
-  ambience();
-  setTrack("rain");
-  document.querySelector(".music-panel").classList.add("paused");
-});
+  );

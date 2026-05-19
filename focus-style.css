@@ -1515,3 +1515,48 @@ body.compact-ui .exam-panel{
     min-width:72px;
   }
 }
+
+/* CLEAN FINAL */
+.sessions-panel,
+.start-hint,
+.overlay-task-progress{
+  display:none!important;
+}
+
+/* cleaner spacing */
+.hero{
+  gap:22px!important;
+}
+
+.panel h2,
+.exam-head h2,
+.rhythm-card h2,
+.weekly-panel h2{
+  margin-bottom:10px!important;
+}
+
+/* reduce duplicated text feeling */
+.target-advice,
+.exam-advice,
+.weekly-insight,
+.rhythm-status-line{
+  padding:12px 14px!important;
+  border-radius:16px!important;
+}
+
+/* cleaner task area */
+.plan-card{
+  gap:12px;
+}
+
+.daily-task{
+  min-height:58px;
+}
+
+/* final button consistency */
+.primary-actions button,
+.task-actions button,
+.break-modal-actions button,
+.target-options button{
+  font-family:Inter,sans-serif!important;
+}
