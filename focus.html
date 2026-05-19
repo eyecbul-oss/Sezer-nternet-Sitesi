@@ -1090,6 +1090,215 @@ h1{
   .settings-tabs,.pin-row{grid-template-columns:1fr}
 }
 
+
+.welcome-modal{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(2,6,23,.86);
+  backdrop-filter:blur(20px);
+}
+.welcome-modal.show{display:flex}
+.welcome-card{
+  width:min(620px,100%);
+  padding:34px;
+  border-radius:38px;
+  background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 30px 90px rgba(0,0,0,.45);
+}
+.welcome-card h2{
+  font-family:Montserrat,Inter,sans-serif;
+  font-size:42px;
+  margin-bottom:12px;
+}
+.welcome-card p{
+  color:#dbeafe;
+  line-height:1.65;
+  font-weight:800;
+  margin-bottom:16px;
+}
+.welcome-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+.welcome-actions button{
+  min-height:52px;
+  border-radius:17px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(15,23,42,.86);
+  color:white;
+  font-weight:900;
+}
+.welcome-actions button.primary{
+  background:var(--gold);
+  color:#111827;
+  border-color:var(--gold);
+}
+.active-profile-card{
+  margin-top:14px;
+  padding:16px;
+  border-radius:20px;
+  background:rgba(34,197,94,.10);
+  border:1px solid rgba(34,197,94,.22);
+  color:#dcfce7;
+  font-weight:900;
+  line-height:1.5;
+}
+.cloud-soon{
+  margin-top:14px;
+  padding:16px;
+  border-radius:20px;
+  background:rgba(56,189,248,.10);
+  border:1px solid rgba(56,189,248,.22);
+  color:#dbeafe;
+  font-weight:800;
+  line-height:1.55;
+}
+.cloud-soon b{color:#facc15}
+.settings-panel .danger{
+  background:rgba(239,68,68,.15)!important;
+  color:#fecaca!important;
+  border-color:rgba(239,68,68,.25)!important;
+}
+@media(max-width:980px){
+  .welcome-card{padding:24px;border-radius:30px}
+  .welcome-card h2{font-size:32px}
+  .welcome-actions{grid-template-columns:1fr}
+}
+
+
+.student-card-list{
+  display:grid;
+  gap:12px;
+  margin-top:14px;
+}
+.student-card{
+  padding:16px;
+  border-radius:20px;
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.045));
+  border:1px solid rgba(255,255,255,.12);
+}
+.student-card.active{
+  border-color:rgba(250,204,21,.45);
+  box-shadow:0 0 28px rgba(250,204,21,.10);
+}
+.student-card-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+}
+.student-card-name{
+  font-family:Montserrat,Inter,sans-serif;
+  font-size:18px;
+  font-weight:900;
+}
+.student-card-mail{
+  color:#cbd5e1;
+  font-size:13px;
+  font-weight:800;
+  margin-top:4px;
+  word-break:break-all;
+}
+.student-card-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+.student-card-stats div{
+  padding:9px;
+  border-radius:14px;
+  background:rgba(15,23,42,.72);
+  color:#dbeafe;
+  font-size:12px;
+  font-weight:900;
+}
+.student-card button{
+  min-height:36px!important;
+  padding:0 10px;
+  border-radius:12px;
+}
+.report-box{
+  margin-top:14px;
+  padding:16px;
+  border-radius:20px;
+  background:rgba(56,189,248,.10);
+  border:1px solid rgba(56,189,248,.22);
+  color:#dbeafe;
+  line-height:1.6;
+  font-weight:800;
+}
+.report-box b{color:#facc15}
+@media(max-width:980px){
+  .student-card-top{display:grid}
+  .student-card-stats{grid-template-columns:1fr}
+}
+
+
+.profile-search{
+  width:100%;
+  padding:13px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(15,23,42,.86);
+  color:white;
+  margin:10px 0;
+}
+.student-card-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.student-card-actions button.delete-profile{
+  background:rgba(239,68,68,.16)!important;
+  color:#fecaca!important;
+  border-color:rgba(239,68,68,.25)!important;
+}
+.suggestion-card{
+  margin-top:14px;
+  padding:16px;
+  border-radius:20px;
+  background:rgba(250,204,21,.10);
+  border:1px solid rgba(250,204,21,.22);
+  color:#fde68a;
+  font-weight:900;
+  line-height:1.55;
+}
+.report-pretty{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:12px;
+}
+.report-mini{
+  padding:12px;
+  border-radius:16px;
+  background:rgba(15,23,42,.72);
+  border:1px solid rgba(255,255,255,.10);
+}
+.report-mini b{
+  display:block;
+  color:#facc15;
+  font-size:20px;
+  margin-bottom:4px;
+}
+.report-mini span{
+  color:#dbeafe;
+  font-size:13px;
+  font-weight:900;
+}
+@media(max-width:980px){
+  .report-pretty{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 
@@ -1102,6 +1311,20 @@ h1{
     <h2>Seans Tamamlandı 🔥</h2>
     <p>Harika! Bir pomodoro daha bitti. Kısa bir mola ver, sonra kaldığın yerden devam et.</p>
     <button class="btn green" onclick="closeSuccess()">Devam Et</button>
+  </div>
+</div>
+
+
+<div class="welcome-modal" id="welcomeModal">
+  <div class="welcome-card">
+    <h2>SezR Focus’a Hoş Geldin</h2>
+    <p>Çalışmalarını öğrenci profiline göre ayrı tutabilirsin. Mail girersen süre, görev ve istatistikler bu profile kaydedilir.</p>
+    <input id="welcomeEmail" type="email" placeholder="Öğrenci mail adresi" style="width:100%;padding:15px;border-radius:18px;border:1px solid rgba(255,255,255,.14);background:rgba(15,23,42,.86);color:white;margin-bottom:10px">
+    <input id="welcomeName" placeholder="Öğrenci adı" style="width:100%;padding:15px;border-radius:18px;border:1px solid rgba(255,255,255,.14);background:rgba(15,23,42,.86);color:white">
+    <div class="welcome-actions">
+      <button class="primary" onclick="welcomeLogin()">Profile Başla</button>
+      <button onclick="continueGeneral()">Genel Profil ile Devam</button>
+    </div>
   </div>
 </div>
 
@@ -1308,10 +1531,10 @@ h1{
       <button class="primary" onclick="loginStudentAdvanced()">Profile Geç</button>
       <button onclick="logoutStudent()">Genel Profil</button>
     </div>
-    <div class="settings-info" id="cloudStatus">Yerel profil modu aktif.</div>
-    <div class="settings-info" id="profileInfo">Profil bilgisi bekleniyor.</div>
+    <div class="active-profile-card" id="activeProfileCard">Aktif profil hazırlanıyor.</div><div class="settings-info" id="cloudStatus">Yerel profil modu aktif.</div>
+    <div class="settings-info" id="profileInfo">Profil bilgisi bekleniyor.</div><div class="suggestion-card" id="sessionSuggestion">Öneri hazırlanıyor.</div>
     <p class="settings-small">Not: Bu sürüm aynı cihaz ve tarayıcıda kayıt tutar. Firebase bağlanınca gerçek bulut senkronizasyonuna geçer.</p>
-    <div class="profile-list" id="profileList"></div>
+    <input class="profile-search" id="profileSearch" placeholder="Öğrenci ara..." oninput="renderStudentCards()"><div class="student-card-list" id="studentCardList"></div>
   </div>
 
   <div class="settings-view" id="tab-security">
@@ -1335,9 +1558,9 @@ h1{
     </div>
     <div class="setting-actions">
       <button onclick="downloadBackup()">Dosya İndir</button>
-      <button onclick="resetStats()">İstatistikleri Sıfırla</button>
+      <button onclick="resetStats()" class="danger">İstatistikleri Sıfırla</button>
     </div>
-    <div class="settings-info">Yedek; profil, süre, görevler, seanslar ve notları içerir.</div>
+    <div class="settings-info">Yedek; profil, süre, görevler, seanslar ve notları içerir.</div><div class="cloud-soon"><b>Bulut Hazır:</b> Firebase bilgileri eklendiğinde bu panel gerçek bulut senkronizasyonuna dönüşecek.</div><div class="report-box" id="quickReport">Rapor hazırlanıyor.</div><div class="setting-actions"><button onclick="copyQuickReport()">Raporu Kopyala</button><button onclick="clearWelcome()">İlk Açılışı Tekrar Göster</button></div>
   </div>
 </section>
 
@@ -1480,6 +1703,7 @@ function loginStudent(){
   localStorage.setItem("sezrActiveEmail", activeEmail);
   stats = loadStats();
   renderEverything();
+showWelcomeIfNeeded();
   updateCloudStatus();
 }
 
@@ -2135,6 +2359,262 @@ updateCloudStatus = function(){
   }
   updateLoginChip();
   renderProfileList();
+};
+
+
+function showWelcomeIfNeeded(){
+  const seen = localStorage.getItem("sezrWelcomeSeen");
+  const modal = document.getElementById("welcomeModal");
+  if(!seen && modal){
+    modal.classList.add("show");
+  }
+}
+
+function welcomeLogin(){
+  const email = document.getElementById("welcomeEmail").value.trim().toLowerCase();
+  const name = document.getElementById("welcomeName").value.trim();
+  if(!email || !email.includes("@")){
+    alert("Geçerli bir mail adresi gir.");
+    return;
+  }
+  activeEmail = email;
+  localStorage.setItem("sezrActiveEmail", activeEmail);
+  localStorage.setItem("sezrWelcomeSeen", "1");
+  stats = loadStats();
+  if(name){
+    stats.studentName = name;
+    saveStats();
+    saveKnownProfile(activeEmail, name);
+  }else{
+    saveKnownProfile(activeEmail, "");
+  }
+  const modal = document.getElementById("welcomeModal");
+  if(modal) modal.classList.remove("show");
+  renderEverything();
+  updateLoginChip();
+}
+
+function continueGeneral(){
+  localStorage.setItem("sezrWelcomeSeen", "1");
+  const modal = document.getElementById("welcomeModal");
+  if(modal) modal.classList.remove("show");
+}
+
+const oldUpdateLoginChip = typeof updateLoginChip === "function" ? updateLoginChip : null;
+updateLoginChip = function(){
+  const chip = document.getElementById("loginChip");
+  const activeCard = document.getElementById("activeProfileCard");
+  const label = activeEmail && activeEmail !== "default" ? activeEmail : "Genel Profil";
+  if(chip) chip.innerHTML = '<span class="login-dot"></span><span>'+label+'</span>';
+  if(activeCard){
+    activeCard.innerHTML = activeEmail && activeEmail !== "default"
+      ? "Aktif öğrenci: " + label + "<br>Veriler bu profile kaydediliyor."
+      : "Aktif profil: Genel Profil<br>Mail girersen öğrenciye özel kayıt açılır.";
+  }
+};
+
+
+function readStatsForEmail(email){
+  try{
+    const key = "sezrFocusStats_" + safeEmailKey(email);
+    return Object.assign(defaultStats(), JSON.parse(localStorage.getItem(key) || "{}"));
+  }catch(e){
+    return defaultStats();
+  }
+}
+
+function renderStudentCards(){
+  const box = document.getElementById("studentCardList");
+  if(!box) return;
+  const list = knownProfiles();
+  box.innerHTML = "";
+  if(list.length === 0){
+    box.innerHTML = '<div class="student-card"><div class="student-card-name">Kayıtlı öğrenci yok</div><div class="student-card-mail">Mail girerek profil oluştur.</div></div>';
+    return;
+  }
+
+  list.forEach(function(p){
+    const s = readStatsForEmail(p.email);
+    const today = new Date().toISOString().slice(0,10);
+    const todayData = s.days && s.days[today] ? s.days[today] : {seconds:0,pomodoros:0};
+    const totalMin = Math.floor((s.totalSeconds || 0)/60);
+    const todayMin = Math.floor((todayData.seconds || 0)/60);
+
+    const div = document.createElement("div");
+    div.className = "student-card " + (p.email === activeEmail ? "active" : "");
+    div.innerHTML =
+      '<div class="student-card-top">' +
+      '<div><div class="student-card-name">'+(p.name || "Öğrenci")+'</div><div class="student-card-mail">'+p.email+'</div></div>' +
+      '<button onclick="quickLoginProfile(\''+p.email.replace(/'/g,"")+'\')">Geç</button>' +
+      '</div>' +
+      '<div class="student-card-stats">' +
+      '<div>Bugün: '+todayMin+' dk</div>' +
+      '<div>Toplam: '+totalMin+' dk</div>' +
+      '<div>Pomodoro: '+(s.totalPomodoros || 0)+'</div>' +
+      '</div>';
+    box.appendChild(div);
+  });
+}
+
+function buildQuickReport(){
+  ensureToday();
+  const today = stats.days[todayKey] || {seconds:0,pomodoros:0,pauses:0};
+  const name = stats.studentName || (activeEmail !== "default" ? activeEmail : "Genel Profil");
+  const todayMin = Math.floor(today.seconds/60);
+  const totalMin = Math.floor(stats.totalSeconds/60);
+  return "SezR Focus Raporu\\n" +
+         "Öğrenci: " + name + "\\n" +
+         "Bugünkü çalışma: " + todayMin + " dk\\n" +
+         "Bugünkü pomodoro: " + today.pomodoros + "\\n" +
+         "Toplam çalışma: " + totalMin + " dk\\n" +
+         "Toplam pomodoro: " + stats.totalPomodoros + "\\n" +
+         "Çalışma serisi: " + stats.streak + " gün\\n" +
+         "Focus puanı: " + calculateFocusScore() + "%";
+}
+
+function renderQuickReport(){
+  const el = document.getElementById("quickReport");
+  if(!el) return;
+  el.innerHTML = "<b>Hızlı Rapor</b><br>" + buildQuickReport().replace(/\\n/g,"<br>");
+}
+
+function copyQuickReport(){
+  const report = buildQuickReport();
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(report).then(function(){alert("Rapor kopyalandı.");});
+  }else{
+    prompt("Raporu kopyala:", report);
+  }
+}
+
+function clearWelcome(){
+  localStorage.removeItem("sezrWelcomeSeen");
+  alert("İlk açılış ekranı bir sonraki girişte tekrar görünecek.");
+}
+
+const oldRenderProfileList2 = typeof renderProfileList === "function" ? renderProfileList : null;
+renderProfileList = function(){
+  renderStudentCards();
+};
+
+const oldRenderEverything2 = typeof renderEverything === "function" ? renderEverything : null;
+renderEverything = function(){
+  renderTasks();
+  renderSessions();
+  renderProfile();
+  renderWeekly();
+  renderDailyProgress();
+  renderHistory();
+  renderExtraPanels();
+  renderStudentCards();
+  renderQuickReport();
+  updateTimer();
+  updateCloudStatus();
+};
+
+
+function deleteProfile(email){
+  if(!confirm(email + " profili listeden kaldırılsın mı? Verileri silmek için ayrıca istatistik sıfırlama gerekir.")) return;
+  let list = knownProfiles().filter(function(p){return p.email !== email;});
+  localStorage.setItem("sezrKnownProfiles", JSON.stringify(list));
+  if(activeEmail === email){
+    activeEmail = "default";
+    localStorage.setItem("sezrActiveEmail","default");
+    stats = loadStats();
+  }
+  renderEverything();
+}
+
+function renderSessionSuggestion(){
+  const el = document.getElementById("sessionSuggestion");
+  if(!el) return;
+  ensureToday();
+  const day = stats.days[todayKey];
+  const min = Math.floor(day.seconds/60);
+  let text = "Bugün için öneri: 25 dakikalık bir başlangıç seansı yap.";
+  if(min >= 60){
+    text = "Harika gidiyorsun. Bugün hedef tamamlandı; istersen 25 dk tekrar seansı yap.";
+  }else if(min >= 30){
+    text = "Yarım saat tamam. Hedefe ulaşmak için bir 25 dk seans daha iyi olur.";
+  }else if(min > 0){
+    text = "Başlangıç yapılmış. Şimdi ritmi kaybetmeden bir seans daha ekle.";
+  }
+  el.textContent = text;
+}
+
+function prettyReportHtml(){
+  ensureToday();
+  const today = stats.days[todayKey] || {seconds:0,pomodoros:0,pauses:0};
+  const name = stats.studentName || (activeEmail !== "default" ? activeEmail : "Genel Profil");
+  const todayMin = Math.floor(today.seconds/60);
+  const totalMin = Math.floor(stats.totalSeconds/60);
+  return '<b>Hızlı Rapor</b><br>' +
+    '<div class="report-pretty">' +
+    '<div class="report-mini"><b>'+name+'</b><span>Öğrenci</span></div>' +
+    '<div class="report-mini"><b>'+todayMin+' dk</b><span>Bugünkü çalışma</span></div>' +
+    '<div class="report-mini"><b>'+today.pomodoros+'</b><span>Bugünkü pomodoro</span></div>' +
+    '<div class="report-mini"><b>'+totalMin+' dk</b><span>Toplam çalışma</span></div>' +
+    '<div class="report-mini"><b>'+stats.streak+' gün</b><span>Çalışma serisi</span></div>' +
+    '<div class="report-mini"><b>%'+calculateFocusScore()+'</b><span>Focus puanı</span></div>' +
+    '</div>';
+}
+
+const oldRenderQuickReport16 = typeof renderQuickReport === "function" ? renderQuickReport : null;
+renderQuickReport = function(){
+  const el = document.getElementById("quickReport");
+  if(!el) return;
+  el.innerHTML = prettyReportHtml();
+};
+
+renderStudentCards = function(){
+  const box = document.getElementById("studentCardList");
+  if(!box) return;
+  const q = (document.getElementById("profileSearch") ? document.getElementById("profileSearch").value : "").toLowerCase();
+  const list = knownProfiles().filter(function(p){
+    return !q || (p.email || "").toLowerCase().includes(q) || (p.name || "").toLowerCase().includes(q);
+  });
+  box.innerHTML = "";
+  if(list.length === 0){
+    box.innerHTML = '<div class="student-card"><div class="student-card-name">Kayıtlı öğrenci yok</div><div class="student-card-mail">Mail girerek profil oluştur.</div></div>';
+    return;
+  }
+
+  list.forEach(function(p){
+    const s = readStatsForEmail(p.email);
+    const today = new Date().toISOString().slice(0,10);
+    const todayData = s.days && s.days[today] ? s.days[today] : {seconds:0,pomodoros:0};
+    const totalMin = Math.floor((s.totalSeconds || 0)/60);
+    const todayMin = Math.floor((todayData.seconds || 0)/60);
+    const div = document.createElement("div");
+    div.className = "student-card " + (p.email === activeEmail ? "active" : "");
+    div.innerHTML =
+      '<div class="student-card-top">' +
+      '<div><div class="student-card-name">'+(p.name || "Öğrenci")+'</div><div class="student-card-mail">'+p.email+'</div></div>' +
+      '<div class="student-card-actions"><button onclick="quickLoginProfile(\''+p.email.replace(/'/g,"")+'\')">Geç</button><button class="delete-profile" onclick="deleteProfile(\''+p.email.replace(/'/g,"")+'\')">Sil</button></div>' +
+      '</div>' +
+      '<div class="student-card-stats">' +
+      '<div>Bugün: '+todayMin+' dk</div>' +
+      '<div>Toplam: '+totalMin+' dk</div>' +
+      '<div>Pomodoro: '+(s.totalPomodoros || 0)+'</div>' +
+      '</div>';
+    box.appendChild(div);
+  });
+};
+
+const oldRenderEverything16 = typeof renderEverything === "function" ? renderEverything : null;
+renderEverything = function(){
+  renderTasks();
+  renderSessions();
+  renderProfile();
+  renderWeekly();
+  renderDailyProgress();
+  renderHistory();
+  renderExtraPanels();
+  renderStudentCards();
+  renderQuickReport();
+  renderSessionSuggestion();
+  updateTimer();
+  updateCloudStatus();
 };
 
 </script>
