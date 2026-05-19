@@ -881,12 +881,36 @@ h1{
     </div>
   </section>
 
-  <h2 class="section-title">İstatistikler</h2>
+
+  <h2 class="section-title">Kayıt ve Yedek</h2>
+  <section class="app-grid">
+    <div class="app-card">
+      <h3>Öğrenci Profili</h3>
+      <p>Bu bilgiler aynı cihaz ve tarayıcıda saklanır.</p>
+      <div class="task-input">
+        <input id="studentName" placeholder="Öğrenci adı">
+        <button onclick="saveStudent()">Kaydet</button>
+      </div>
+      <div class="session-list" id="profileInfo"></div>
+    </div>
+
+    <div class="app-card">
+      <h3>Yedekleme</h3>
+      <p>Bilgileri başka cihaza taşımak için dışa aktar / içe aktar.</p>
+      <div class="hero-actions" style="margin-top:15px">
+        <button class="btn" onclick="exportData()">Dışa Aktar</button>
+        <button class="btn" onclick="importData()">İçe Aktar</button>
+        <button class="btn" onclick="resetStats()">İstatistikleri Sıfırla</button>
+      </div>
+    </div>
+  </section>
+
+  <h2 class="section-title">Gerçek İstatistikler</h2>
   <section class="stats-grid">
-    <div class="stat"><b id="doneCount">0</b><span>Pomodoro</span></div>
-    <div class="stat"><b id="workTime">00:00</b><span>Toplam Çalışma</span></div>
-    <div class="stat"><b id="streak">1</b><span>Günlük Seri</span></div>
-    <div class="stat"><b id="score">85%</b><span>Focus Puanı</span></div>
+    <div class="stat"><b id="doneCount">0</b><span>Bugünkü Pomodoro</span></div>
+    <div class="stat"><b id="workTime">00:00</b><span>Bugünkü Çalışma</span></div>
+    <div class="stat"><b id="streak">0</b><span>Çalışma Serisi</span></div>
+    <div class="stat"><b id="score">0%</b><span>Focus Puanı</span></div>
   </section>
 </div>
 
@@ -999,25 +1023,171 @@ let totalSeconds = 25 * 60;
 let remaining = totalSeconds;
 let timerId = null;
 let running = false;
-let worked = Number(localStorage.getItem("sezrWorked") || 0);
-let done = Number(localStorage.getItem("sezrDone") || 0);
+let currentStart = null;
 
-function formatTime(sec){
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+const todayKey = new Date().toISOString().slice(0,10);
+
+function defaultStats(){
+  return {
+    totalSeconds:0,
+    totalPomodoros:0,
+    days:{},
+    sessions:[],
+    streak:0,
+    lastStudyDate:"",
+    studentName:""
+  };
 }
 
+function loadStats(){
+  try{
+    return Object.assign(defaultStats(), JSON.parse(localStorage.getItem("sezrFocusStats") || "{}"));
+  }catch(e){
+    return defaultStats();
+  }
+}
+
+let stats = loadStats();
+
+function saveStats(){
+  localStorage.setItem("sezrFocusStats", JSON.stringify(stats));
+}
+
+function ensureToday(){
+  if(!stats.days[todayKey]){
+    stats.days[todayKey] = {seconds:0,pomodoros:0,pauses:0};
+  }
+}
+
+function addStudySecond(){
+  ensureToday();
+  stats.totalSeconds++;
+  stats.days[todayKey].seconds++;
+  saveStats();
+}
+
+function completePomodoroRecord(){
+  ensureToday();
+  stats.totalPomodoros++;
+  stats.days[todayKey].pomodoros++;
+  stats.lastStudyDate = todayKey;
+  updateStreak();
+  saveStats();
+}
+
+function addPause(){
+  ensureToday();
+  stats.days[todayKey].pauses++;
+  saveStats();
+}
+
+function updateStreak(){
+  const dates = Object.keys(stats.days)
+    .filter(d => stats.days[d].seconds >= 60)
+    .sort()
+    .reverse();
+
+  let streak = 0;
+  let cursor = new Date(todayKey);
+
+  for(;;){
+    const key = cursor.toISOString().slice(0,10);
+    if(stats.days[key] && stats.days[key].seconds >= 60){
+      streak++;
+      cursor.setDate(cursor.getDate()-1);
+    }else{
+      break;
+    }
+  }
+
+  stats.streak = streak;
+}
+
+function secondsToClock(sec){
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  if(h > 0) return String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0");
+  return "00:" + String(m).padStart(2,"0");
+}
+
+function calculateFocusScore(){
+  ensureToday();
+  const day = stats.days[todayKey];
+  const minutes = Math.floor(day.seconds / 60);
+  const pomodoroBonus = Math.min(40, day.pomodoros * 15);
+  const timeBonus = Math.min(45, minutes);
+  const pausePenalty = Math.min(25, day.pauses * 5);
+  if(minutes === 0 && day.pomodoros === 0) return 0;
+  return Math.max(5, Math.min(100, 30 + pomodoroBonus + timeBonus - pausePenalty));
+}
+
+function renderProfile(){
+  const input = document.getElementById("studentName");
+  const info = document.getElementById("profileInfo");
+  if(input) input.value = stats.studentName || "";
+  if(info){
+    info.innerHTML = '<div class="session-item">' + (stats.studentName ? "Öğrenci: " + stats.studentName : "Öğrenci adı kayıtlı değil.") + '</div>' +
+                     '<div class="session-item">Toplam çalışma: ' + secondsToClock(stats.totalSeconds) + '</div>' +
+                     '<div class="session-item">Toplam pomodoro: ' + stats.totalPomodoros + '</div>';
+  }
+}
+
+function saveStudent(){
+  const input = document.getElementById("studentName");
+  stats.studentName = input.value.trim();
+  saveStats();
+  renderProfile();
+}
+
+function exportData(){
+  const data = JSON.stringify(stats);
+  navigator.clipboard && navigator.clipboard.writeText(data).then(function(){
+    alert("Yedek kodu kopyalandı.");
+  }).catch(function(){
+    prompt("Yedek kodunu kopyala:", data);
+  });
+  if(!navigator.clipboard) prompt("Yedek kodunu kopyala:", data);
+}
+
+function importData(){
+  const data = prompt("Yedek kodunu yapıştır:");
+  if(!data) return;
+  try{
+    const parsed = JSON.parse(data);
+    stats = Object.assign(defaultStats(), parsed);
+    saveStats();
+    renderProfile();
+    renderSessions();
+    updateTimer();
+    alert("Veriler içe aktarıldı.");
+  }catch(e){
+    alert("Yedek kodu okunamadı.");
+  }
+}
+
+function resetStats(){
+  if(!confirm("Tüm focus istatistikleri sıfırlansın mı?")) return;
+  stats = defaultStats();
+  saveStats();
+  renderProfile();
+  renderSessions();
+  updateTimer();
+}
 function updateTimer(){
+  ensureToday();
+  updateStreak();
+
   document.getElementById("timer").textContent = formatTime(remaining);
   const degree = ((totalSeconds - remaining) / totalSeconds) * 360;
   timerRing.style.setProperty("--progress", degree + "deg");
 
-  document.getElementById("doneCount").textContent = done;
-  const wm = Math.floor(worked / 60);
-  const ws = worked % 60;
-  document.getElementById("workTime").textContent = String(wm).padStart(2,"0") + ":" + String(ws).padStart(2,"0");
-  document.getElementById("score").textContent = Math.min(99,85 + done) + "%";
+  document.getElementById("doneCount").textContent = stats.days[todayKey].pomodoros;
+  document.getElementById("workTime").textContent = secondsToClock(stats.days[todayKey].seconds);
+  document.getElementById("streak").textContent = stats.streak;
+  document.getElementById("score").textContent = calculateFocusScore() + "%";
+
+  saveStats();
+  renderProfile();
 }
 
 function startFocus(){
@@ -1030,8 +1200,7 @@ function startFocus(){
   timerId = setInterval(function(){
     if(remaining > 0){
       remaining--;
-      worked++;
-      localStorage.setItem("sezrWorked", worked);
+      addStudySecond();
       updateTimer();
     }else{
       finishFocus();
@@ -1042,6 +1211,7 @@ function startFocus(){
 function pauseFocus(){
   clearInterval(timerId);
   running = false;
+  addPause();
   document.getElementById("modeText").textContent = "Duraklatıldı";
 }
 
@@ -1056,8 +1226,7 @@ function resetFocus(){
 function finishFocus(){
   clearInterval(timerId);
   running = false;
-  done++;
-  localStorage.setItem("sezrDone", done);
+  completePomodoroRecord();
   addSession();
   document.getElementById("modeText").textContent = "Tamamlandı";
   document.getElementById("success").classList.add("show");
@@ -1133,25 +1302,23 @@ function deleteTask(index){
   renderTasks();
 }
 
-let sessions = JSON.parse(localStorage.getItem("sezrSessions") || "[]");
-
 function addSession(){
   const now = new Date();
-  const item = now.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}) + " • " + Math.round(totalSeconds/60) + " dk • " + music[currentMusic].title;
-  sessions.unshift(item);
-  sessions = sessions.slice(0,5);
-  localStorage.setItem("sezrSessions", JSON.stringify(sessions));
+  const item = now.toLocaleString("tr-TR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}) + " • " + Math.round(totalSeconds/60) + " dk • " + music[currentMusic].title;
+  stats.sessions.unshift(item);
+  stats.sessions = stats.sessions.slice(0,20);
+  saveStats();
   renderSessions();
 }
 
 function renderSessions(){
   const list = document.getElementById("sessionList");
   list.innerHTML = "";
-  if(sessions.length === 0){
+  if(!stats.sessions || stats.sessions.length === 0){
     list.innerHTML = '<div class="session-item">Henüz seans yok.</div>';
     return;
   }
-  sessions.forEach(function(item){
+  stats.sessions.slice(0,5).forEach(function(item){
     const div = document.createElement("div");
     div.className = "session-item";
     div.textContent = item;
@@ -1197,6 +1364,7 @@ for(let i=0;i<28;i++){
 loadMusic("rain");
 renderTasks();
 renderSessions();
+renderProfile();
 updateTimer();
 </script>
 
