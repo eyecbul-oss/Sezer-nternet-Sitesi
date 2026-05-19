@@ -314,7 +314,7 @@ function deleteTask(i){
 function renderTasks(){
   const box = $("taskList");
   box.innerHTML = "";
-  if(data.tasks.length === 0){ box.innerHTML = '<div class="session">Henüz görev yok.</div>'; return; }
+  if(data.tasks.length === 0){ box.innerHTML = '<div class="session">Henüz not yok.</div>'; return; }
   data.tasks.forEach((t,i) => {
     const row = document.createElement("div");
     row.className = "task " + (t.done ? "done" : "");
@@ -543,7 +543,6 @@ function buildAmbience(){
 function bind(){
   on("startMainBtn","click",toggleFocus);
   on("startBtn","click",toggleFocus);
-  on("pauseBtn","click",pauseFocus);
   on("resetBtn","click",resetFocus);
   $("rainBtn").addEventListener("click",() => {
     $("ambientLayer").style.display = $("ambientLayer").style.display === "none" ? "block" : "none";

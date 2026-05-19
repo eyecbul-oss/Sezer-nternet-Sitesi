@@ -54,11 +54,10 @@
     </div>
   </div>
 
-  <div class="timer-controls">
-    <button id="startBtn">Başlat</button>
-    <button id="pauseBtn">Duraklat</button>
-    <button id="resetBtn">Sıfırla</button>
-    <button id="rainBtn">Yağmur</button>
+  <div class="main-control-row">
+    <button id="startBtn" class="main-start">Başlat</button>
+    <button id="resetBtn" class="secondary-control">Sıfırla</button>
+    <button id="rainBtn" class="secondary-control">Yağmur</button>
   </div>
 
   <div class="mode-controls">
@@ -68,15 +67,15 @@
     <button class="mode" data-min="120">Deep</button>
   </div>
 
-  <div class="break-controls">
-    <button class="break-btn" data-break="5">☕ 5 dk mola</button>
-    <button class="break-btn" data-break="10">🌙 10 dk mola</button>
-  </div>
-
-  <div class="auto-next-row">
+  <div class="break-box">
+    <div class="break-title">Seans bitince mola verebilirsin</div>
+    <div class="break-controls">
+      <button class="break-btn" data-break="5">☕ 5 dk mola</button>
+      <button class="break-btn" data-break="10">🌙 10 dk mola</button>
+    </div>
     <label class="auto-next">
       <input id="autoNext" type="checkbox">
-      Seans bitince otomatik mola başlat
+      Seans bitince 5 dk molayı otomatik başlat
     </label>
   </div>
 
@@ -126,26 +125,21 @@
 </section>
 
 <section class="status-card">
-  <h2>Şu Anki Durum</h2>
-  <div class="usage-tip">1️⃣ Başlat’a bas → 2️⃣ Müzik otomatik başlar → 3️⃣ Seans sonunda mola önerilir</div><div id="smartStatus">Başlamak için hazır.</div>
+  <h2>Nasıl Kullanılır?</h2>
+  <div class="usage-tip">Başlat’a basınca sayaç ve müzik birlikte başlar. Duraklatınca ikisi de durur. Seans bitince istersen mola başlat.</div>
+  <div id="smartStatus">Başlamak için hazır.</div>
 </section>
-
 <h2 class="section-title">Haftalık Özet</h2>
 <section class="week-grid" id="weekGrid"></section>
-
-<section class="progress-card">
-  <h2>Bugünkü Plan</h2>
-  <div id="todayPlan" class="plan-box">Konu yazınca plan hazırlanır.</div>
-</section>
 
 <h2 class="section-title">Çalışma Planı ve Seanslar</h2>
 <section class="task-grid">
   <div class="panel">
-    <h2>Bugünkü Plan</h2>
+    <h2>Plan Notları</h2>
     <p id="planDisplay">Plan yazılmadı.</p>
     <div class="task-input">
-      <input id="quickNoteInput" placeholder="Kısa not ekle: Zorlandığım soru tipi...">
-      <button id="addNoteBtn">Not Ekle</button>
+      <input id="quickNoteInput" placeholder="Kısa not ekle">
+      <button id="addNoteBtn">Ekle</button>
     </div>
     <div id="taskList" class="task-list"></div>
   </div>

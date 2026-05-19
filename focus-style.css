@@ -169,3 +169,121 @@ body.break-mode #timerStatus{
   }
 }
 
+
+
+/* V6 CLEAN UI OVERRIDES */
+.timer-controls{display:none!important}
+
+.main-control-row{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:12px;
+  margin-top:10px;
+}
+.main-start,
+.secondary-control{
+  min-height:58px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(15,23,42,.88);
+  color:#fff;
+  font-weight:900;
+  cursor:pointer;
+  font-size:16px;
+}
+.main-start{
+  background:linear-gradient(180deg,#25d366,#128c4a);
+  box-shadow:0 0 24px rgba(37,211,102,.20);
+}
+.main-start.running{
+  background:linear-gradient(180deg,#f97316,#ea580c)!important;
+  box-shadow:0 0 24px rgba(249,115,22,.20);
+}
+.secondary-control:hover,
+.break-btn:hover{
+  background:rgba(250,204,21,.12)!important;
+}
+.break-box{
+  margin-top:14px;
+  padding:16px;
+  border-radius:22px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.10);
+}
+.break-title{
+  color:#dbeafe;
+  font-weight:900;
+  margin-bottom:10px;
+}
+.break-controls{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:10px!important;
+  margin:0!important;
+}
+.break-btn{
+  min-height:52px!important;
+  border-radius:16px!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  background:rgba(15,23,42,.88)!important;
+  color:white!important;
+  font-weight:900!important;
+  cursor:pointer!important;
+  font-size:15px!important;
+}
+.auto-next{
+  margin-top:10px;
+  width:100%;
+  min-height:46px;
+  padding:0 12px;
+  border-radius:15px;
+  background:rgba(15,23,42,.62);
+  border:1px solid rgba(255,255,255,.08);
+  color:#dbeafe;
+  font-weight:800;
+  display:flex!important;
+  align-items:center;
+  justify-content:flex-start!important;
+  gap:8px;
+}
+.auto-next input{
+  width:18px;
+  height:18px;
+}
+.status-card{
+  margin-top:20px;
+  padding:24px;
+  border-radius:30px;
+  background:linear-gradient(135deg,rgba(56,189,248,.11),rgba(250,204,21,.07)),rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  box-shadow:0 18px 42px rgba(0,0,0,.24);
+}
+.status-card h2{
+  font-family:Montserrat;
+  font-size:26px;
+  margin-bottom:8px;
+}
+.usage-tip{
+  margin:10px 0 14px;
+  padding:14px 18px;
+  border-radius:18px;
+  background:rgba(250,204,21,.10);
+  border:1px solid rgba(250,204,21,.20);
+  color:#fde68a;
+  font-weight:800;
+  line-height:1.5;
+}
+#smartStatus{
+  color:#dbeafe;
+  font-weight:900;
+  line-height:1.6;
+}
+.task-grid .panel:first-child p{
+  color:#fde68a!important;
+}
+@media(max-width:700px){
+  .main-control-row,
+  .break-controls{
+    grid-template-columns:1fr!important;
+  }
+}
