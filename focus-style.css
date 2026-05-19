@@ -112,3 +112,60 @@ body.break-mode #timerStatus{
   font-weight:900;
   line-height:1.5;
 }
+
+
+.usage-tip{
+  margin-bottom:14px;
+  padding:14px 18px;
+  border-radius:18px;
+  background:rgba(250,204,21,.10);
+  border:1px solid rgba(250,204,21,.20);
+  color:#fde68a;
+  font-weight:800;
+  line-height:1.5;
+}
+
+.break-controls{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:12px!important;
+  margin-top:16px!important;
+}
+
+.break-btn{
+  min-height:54px!important;
+  border-radius:18px!important;
+  background:rgba(15,23,42,.92)!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  color:#fff!important;
+  font-size:16px!important;
+  font-weight:900!important;
+}
+
+.auto-next-row{
+  margin-top:12px;
+}
+
+.auto-next{
+  width:100%;
+  min-height:54px;
+  padding:0 18px;
+  border-radius:18px;
+  background:rgba(15,23,42,.72);
+  border:1px solid rgba(255,255,255,.10);
+  color:#dbeafe;
+  font-weight:800;
+  justify-content:flex-start!important;
+}
+
+.auto-next input{
+  width:18px;
+  height:18px;
+}
+
+@media(max-width:700px){
+  .break-controls{
+    grid-template-columns:1fr!important;
+  }
+}
+

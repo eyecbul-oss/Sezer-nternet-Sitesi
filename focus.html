@@ -39,7 +39,7 @@
   <p>Pomodoro, gerçek müzik, gerçek istatistik ve sade AI tavsiyesi. Gereksiz kalabalık yok.</p>
 
   <div class="hero-actions">
-    <button class="btn primary" id="startMainBtn">Başlat</button>
+    <button class="btn primary" id="startMainBtn">Başlat / Duraklat</button>
     <button class="btn" id="cleanBtn">Clean Mode</button>
   </div>
 
@@ -69,9 +69,15 @@
   </div>
 
   <div class="break-controls">
-    <button class="break-btn" data-break="5">5 dk mola</button>
-    <button class="break-btn" data-break="10">10 dk mola</button>
-    <label class="auto-next"><input id="autoNext" type="checkbox"> Otomatik sonraki seans</label>
+    <button class="break-btn" data-break="5">☕ 5 dk mola</button>
+    <button class="break-btn" data-break="10">🌙 10 dk mola</button>
+  </div>
+
+  <div class="auto-next-row">
+    <label class="auto-next">
+      <input id="autoNext" type="checkbox">
+      Seans bitince otomatik mola başlat
+    </label>
   </div>
 
   <div class="goal-row">
@@ -119,16 +125,9 @@
   <div class="stat"><b id="focusScore">0%</b><span>Focus puanı</span></div>
 </section>
 
-<section class="progress-card">
-  <h2>Günlük Hedef</h2>
-  <p>Varsayılan hedef: 60 dakika.</p>
-  <div class="progress-line"><div id="dailyProgress"></div></div>
-  <div id="progressText">0 / 60 dk</div>
-</section>
-
 <section class="status-card">
   <h2>Şu Anki Durum</h2>
-  <div id="smartStatus">Başlamak için hazır.</div>
+  <div class="usage-tip">1️⃣ Başlat’a bas → 2️⃣ Müzik otomatik başlar → 3️⃣ Seans sonunda mola önerilir</div><div id="smartStatus">Başlamak için hazır.</div>
 </section>
 
 <h2 class="section-title">Haftalık Özet</h2>
