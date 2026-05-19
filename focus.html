@@ -17,7 +17,7 @@
     <div class="auth-card">
       <div class="auth-brand">Sez<span>R</span> Focus</div>
       <h1>Çalışma hesabına giriş yap</h1>
-      <p>Mail ve şifrenle giriş yap. Farklı cihazdan girince kayıtların aynı hesaptan açılır.</p>
+      <p>Mail ve şifrenle giriş yap.</p>
 
       <div class="auth-tabs">
         <button id="loginTab" class="active">Giriş Yap</button>
@@ -30,16 +30,10 @@
       <label>Şifre</label>
       <input id="authPassword" type="password" placeholder="En az 6 karakter" autocomplete="current-password">
 
-      <input id="authName" class="hidden" placeholder="Ad Soyad">
-
-      <button id="authSubmit" class="auth-submit">Giriş Yap</button>
+            <button id="authSubmit" class="auth-submit">Giriş Yap</button>
       <button id="forgotBtn" class="auth-link">Şifremi unuttum</button>
 
       <div id="authMessage" class="auth-message"></div>
-
-      <div class="auth-note">
-        <b>Not:</b> Firebase Authentication’da Email/Password açık olmalı. Firestore açık olursa kayıtlar buluta gider.
-      </div>
     </div>
   </section>
 
@@ -176,21 +170,11 @@
     </div>
 
     <div id="syncStatus" class="sync-card">
-      <b>Bulut bağlantısı aktif</b>
-      <span>Bu hesaba giriş yapılan cihazlarda çalışma kayıtları eşleşir.</span>
+      <b>Bulut aktif</b>
+      <span>Kayıtların hesabına bağlı.</span>
     </div>
 
-    <label>Ad Soyad</label>
-    <input id="profileNameInput" placeholder="Ad Soyad">
-
-    <div class="settings-actions">
-      <button id="saveProfileBtn" class="gold-action">Profili Kaydet</button>
-      <button id="logoutBtn">Çıkış Yap</button>
-    </div>
-
-    <div class="info-box small-info">
-      Veriler otomatik kaydedilir. Ekstra kod kopyalamaya gerek yok.
-    </div>
+    <button id="logoutBtn" class="logout-clean">Çıkış Yap</button>
   </aside>
 
   <div id="successModal" class="modal">

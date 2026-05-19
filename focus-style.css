@@ -32,3 +32,28 @@ body:after{content:"";position:fixed;inset:0;z-index:-4;background-image:linear-
 .settings-panel .danger{
   display:none!important;
 }
+
+
+/* V-clean copy: remove technical-looking account text */
+.auth-note,
+.cloud-note,
+.small-info{
+  display:none!important;
+}
+.logout-clean{
+  width:100%;
+  min-height:54px;
+  margin-top:14px;
+  border-radius:17px;
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(15,23,42,.88);
+  color:white;
+  font-weight:900;
+  cursor:pointer;
+}
+.settings-panel{
+  max-width:420px;
+}
+.sync-card span{
+  font-size:15px;
+}

@@ -102,10 +102,10 @@ document.addEventListener("DOMContentLoaded", () => {
     try{
       showMessage("Hesap oluşturuluyor...");
       const result = await auth.createUserWithEmailAndPassword(email, pass);
-      if(name) await result.user.updateProfile({displayName:name});
+
       data = blank();
       data.email = email;
-      data.name = name;
+      data.name = "";
       user = result.user;
       await saveCloud();
     }catch(e){
@@ -136,7 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
     mode = next;
     $("loginTab").classList.toggle("active", mode==="login");
     $("registerTab").classList.toggle("active", mode==="register");
-    $("authName").classList.toggle("hidden", mode==="login");
     $("authSubmit").textContent = mode==="login" ? "Giriş Yap" : "Hesap Oluştur";
     showMessage("");
   }
@@ -328,10 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("progressFill").style.width = pct+"%";
     $("progressText").textContent = min+" / 60 dk • %"+pct;
     $("accountEmail").textContent = user ? user.email : "";
-    if(document.activeElement !== $("profileNameInput")){
-      $("profileNameInput").value = data.name || "";
-    }
-    renderNotes();
+renderNotes();
     renderSessions();
   }
 
@@ -361,8 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function savePlan(){ data.plan=$("planInput").value.trim(); await saveCloud(); render(); }
   async function addNote(){ const v=$("noteInput").value.trim(); if(!v)return; data.notes.push(v); $("noteInput").value=""; await saveCloud(); render(); }
-  async function saveProfile(){ data.name=$("profileNameInput").value.trim(); await saveCloud(); render(); $("settingsPanel").classList.remove("show"); }
-  function exportData(){ const raw=JSON.stringify(data); navigator.clipboard?navigator.clipboard.writeText(raw).then(()=>alert("Yedek kodu kopyalandı.")):prompt("Yedek kodu:",raw); }
+function exportData(){ const raw=JSON.stringify(data); navigator.clipboard?navigator.clipboard.writeText(raw).then(()=>alert("Yedek kodu kopyalandı.")):prompt("Yedek kodu:",raw); }
   async function importData(){ const raw=prompt("Yedek kodunu yapıştır:"); if(!raw)return; try{data=Object.assign(blank(),JSON.parse(raw)); await saveCloud(); render(); alert("Yedek yüklendi.");}catch{alert("Yedek okunamadı.");} }
   async function resetData(){ if(!confirm("Bu hesabın verileri silinsin mi?"))return; data=blank(); data.email=user.email; await saveCloud(); reset(); render(); }
 
@@ -384,7 +379,6 @@ document.addEventListener("DOMContentLoaded", () => {
   $("volumeRange").oninput=e=>{ $("focusAudio").volume=e.target.value/100; $("volumeText").textContent="🔊 "+e.target.value+"%"; };
   $("settingsBtn").onclick=()=>$("settingsPanel").classList.toggle("show");
   $("closeSettingsBtn").onclick=()=>$("settingsPanel").classList.remove("show");
-  $("saveProfileBtn").onclick=saveProfile;
   $("logoutBtn").onclick=()=>auth.signOut();
   $("closeModalBtn").onclick=()=>{ $("successModal").classList.remove("show"); reset(); };
   document.querySelectorAll(".mode").forEach(btn=>btn.onclick=()=>{ document.querySelectorAll(".mode").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); focusSeconds=Number(btn.dataset.min)*60; totalSeconds=focusSeconds; remaining=totalSeconds; reset(); });
