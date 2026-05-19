@@ -15,3 +15,40 @@ body:after{content:"";position:fixed;inset:0;z-index:-4;background-image:linear-
 .modal{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(2,6,23,.84);backdrop-filter:blur(18px)}.modal.show{display:flex}.modal-box{max-width:540px;text-align:center;padding:38px;border-radius:38px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.18);box-shadow:0 30px 90px rgba(0,0,0,.45)}.modal-box h2{font-family:Montserrat;font-size:40px;color:var(--gold);margin-bottom:12px}.modal-box p{color:#dbeafe;line-height:1.6;margin-bottom:18px}
 @media(max-width:1000px){.topbar{position:relative;top:0;flex-direction:column}.hero{grid-template-columns:1fr;text-align:center;min-height:auto}.plan-card{margin-left:auto;margin-right:auto}.track-grid,.stats-grid,.bottom-grid{grid-template-columns:1fr 1fr}.timer-ring{width:270px;height:270px}#timerText{font-size:58px}.break-card{grid-template-columns:1fr}.music-now,.music-controls{display:grid;grid-template-columns:1fr;text-align:center}.eq{justify-content:center}}
 @media(max-width:620px){.page{padding:14px 14px 90px}.logo{font-size:25px}nav a{font-size:12px;padding:9px 10px}.intro h1{font-size:48px}.plan-input-row,.primary-actions,.mode-row,.track-grid,.stats-grid,.bottom-grid,.note-row,.settings-actions{grid-template-columns:1fr}.settings-btn{right:16px;bottom:16px}.settings-panel{right:14px;bottom:84px}}
+
+/* Audio control cleanup */
+.music-controls{
+  grid-template-columns:auto minmax(180px,1fr) auto!important;
+}
+#audioToggleBtn{
+  min-width:84px!important;
+}
+#volumeText{
+  white-space:nowrap;
+  color:#dbeafe;
+  font-weight:900;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+
+
+/* Remove separate audio button: audio follows main timer */
+.music-controls{
+  grid-template-columns:1fr auto!important;
+  max-width:520px;
+}
+#volumeRange{
+  min-width:240px;
+}
+#audioToggleBtn{
+  display:none!important;
+}
+@media(max-width:620px){
+  .music-controls{
+    grid-template-columns:1fr!important;
+  }
+  #volumeText{
+    justify-content:center;
+  }
+}

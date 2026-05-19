@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.className = document.body.className.replace(/theme-\w+/g,"").trim();
     document.body.classList.add(t.theme);
     $("trackTitle").textContent = t.title;
-    $("trackStatus").textContent = "Sayaç başlayınca müzik de başlar.";
+    $("trackStatus").textContent = "Müzik sayaçla birlikte başlar ve durur.";
     $("rainLayer").style.display = track === "rain" ? "block" : "none";
     document.querySelectorAll(".track").forEach(b=>b.classList.toggle("active", b.dataset.track===track));
   }
@@ -54,7 +54,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }).catch(()=>tryAudio(list,i+1));
   }
 
-  function playAudio(){ if(!isAudioPlaying) tryAudio(paths(currentTrack)); }
+  function playAudio(){ 
+    if(isBreak){
+      forceStopAudio();
+      return;
+    }
+    if(!isAudioPlaying) tryAudio(paths(currentTrack)); 
+  }
   function pauseAudio(){ 
     if(isAudioPlaying){ 
       $("focusAudio").pause(); 
@@ -86,15 +92,29 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     beep();
   }
-  function toggleAudio(){ isAudioPlaying ? pauseAudio() : playAudio(); }
+  function forceStopAudio(){
+    const audio = $("focusAudio");
+    audio.pause();
+    audio.currentTime = 0;
+    isAudioPlaying = false;
+    document.querySelector(".music-panel").classList.add("paused");
+    $("trackStatus").textContent = "Mola sırasında ses kapalı";
+  }
+
+  function toggleAudio(){ 
+    if(isBreak){
+      $("trackStatus").textContent = "Mola sırasında ses kapalı";
+      return;
+    }
+    isAudioPlaying ? pauseAudio() : playAudio(); 
+  }
 
   function start(){
     if(running) return;
     running=true;
     $("timerStatus").textContent = isBreak ? "Mola" : "Çalışıyor";
     if(isBreak){
-      pauseAudio();
-      $("trackStatus").textContent = "Mola sırasında müzik kapalı";
+      forceStopAudio();
     }else{
       playAudio();
     }
@@ -138,8 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
     totalSeconds=min*60;
     remaining=totalSeconds;
     $("timerStatus").textContent="Mola";
-    pauseAudio();
-    $("trackStatus").textContent = "Mola sırasında müzik kapalı";
+    forceStopAudio();
     render();
     start();
   }
@@ -165,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
     data.sessions=data.sessions.slice(0,8);
     save();
 
-    if($("autoBreak").checked) startBreak(5);
+    if($("autoBreak").checked){ forceStopAudio(); startBreak(5); }
     else { pauseAudio(); $("successModal").classList.add("show"); $("timerStatus").textContent="Tamamlandı"; render(); }
   }
 
@@ -263,8 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("resetBtn").onclick=reset;
   $("savePlanBtn").onclick=savePlan;
   $("addNoteBtn").onclick=addNote;
-  $("audioToggleBtn").onclick=toggleAudio;
-  $("volumeRange").oninput=e=>{ $("focusAudio").volume=e.target.value/100; $("volumeText").textContent=e.target.value+"%"; };
+  $("volumeRange").oninput=e=>{ $("focusAudio").volume=e.target.value/100; $("volumeText").textContent="🔊 "+e.target.value+"%"; };
   $("settingsBtn").onclick=()=>$("settingsPanel").classList.toggle("show");
   $("loginBtn").onclick=login;
   $("generalBtn").onclick=general;
