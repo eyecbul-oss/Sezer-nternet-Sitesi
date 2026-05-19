@@ -312,7 +312,12 @@ document.addEventListener("DOMContentLoaded", () => {
     $("mainToggleBtn").textContent = running ? "Duraklat" : (remaining<totalSeconds ? "Devam Et" : "Başlat");
     $("mainToggleBtn").classList.toggle("running", running);
     $("savedPlan").textContent = data.plan || "Henüz plan yazılmadı.";
-    if(document.activeElement !== $("planInput")){
+    const active = document.activeElement;
+    const typing =
+      active &&
+      (active.tagName === "INPUT" || active.tagName === "TEXTAREA");
+
+    if(!typing && $("planInput")){
       $("planInput").value = data.plan || "";
     }
     $("aiAdvice").textContent = advice();
@@ -323,7 +328,9 @@ document.addEventListener("DOMContentLoaded", () => {
     $("progressFill").style.width = pct+"%";
     $("progressText").textContent = min+" / 60 dk • %"+pct;
     $("accountEmail").textContent = user ? user.email : "";
-    $("profileNameInput").value = data.name || "";
+    if(document.activeElement !== $("profileNameInput")){
+      $("profileNameInput").value = data.name || "";
+    }
     renderNotes();
     renderSessions();
   }
