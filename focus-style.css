@@ -1610,3 +1610,26 @@ textarea{
 }
 .auth-message.error{color:#fecaca!important}
 .auth-message.success{color:#bbf7d0!important}
+
+
+/* NO LOCK LOGIN PATCH */
+.guest-btn{
+  width:100%;
+  min-height:50px;
+  margin-top:10px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(15,23,42,.86);
+  color:#dbeafe;
+  font-weight:900;
+  cursor:pointer;
+}
+.guest-btn:hover{
+  border-color:rgba(250,204,21,.35);
+  color:#fde68a;
+}
+.auth-submit:disabled{opacity:.65;cursor:not-allowed}
+.auth-message.error{color:#fecaca!important}
+.auth-message.success{color:#bbf7d0!important}
+*:not(input):not(textarea){user-select:none;-webkit-user-select:none}
+input,textarea{user-select:text!important;-webkit-user-select:text!important}
