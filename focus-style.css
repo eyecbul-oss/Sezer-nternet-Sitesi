@@ -57,3 +57,5 @@ body:after{content:"";position:fixed;inset:0;z-index:-4;background-image:linear-
 .sync-card span{
   font-size:15px;
 }
+
+.auth-submit:disabled{opacity:.65;cursor:not-allowed;filter:grayscale(.2)}

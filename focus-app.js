@@ -46,14 +46,18 @@ document.addEventListener("DOMContentLoaded", () => {
   async function loadCloud(){
     data = loadLocal();
     if(user && db){
-      const snap = await userDoc().get();
-      if(snap.exists){
-        data = Object.assign(blank(), snap.data());
-        saveLocal();
-      }else{
-        data.email = user.email || "";
-        data.name = user.displayName || "";
-        await saveCloud();
+      try{
+        const snap = await userDoc().get();
+        if(snap.exists){
+          data = Object.assign(blank(), snap.data());
+          saveLocal();
+        }else{
+          data.email = user.email || "";
+          await saveCloud();
+        }
+      }catch(e){
+        console.warn("Firestore okunamadı, yerel kayıtla devam:", e);
+        data.email = user.email || data.email || "";
       }
     }
     render();
@@ -86,18 +90,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = $("authEmail").value.trim().toLowerCase();
     const pass = $("authPassword").value;
     if(!email || !pass){ showMessage("Mail ve şifre gir."); return; }
+    if(!auth){ showMessage("Firebase bağlantısı hazır değil."); return; }
+
     try{
       showMessage("Giriş yapılıyor...");
-      await auth.signInWithEmailAndPassword(email, pass);
+      $("authSubmit").disabled = true;
+
+      await Promise.race([
+        auth.signInWithEmailAndPassword(email, pass),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 10000))
+      ]);
+
+      showMessage("");
     }catch(e){
-      showMessage(errorText(e));
+      if(e.message === "timeout"){
+        showMessage("Giriş uzun sürdü. Email/Password açık mı ve site internetten güncel yüklendi mi kontrol et.");
+      }else{
+        showMessage(errorText(e));
+      }
+    }finally{
+      $("authSubmit").disabled = false;
     }
   }
 
   async function register(){
     const email = $("authEmail").value.trim().toLowerCase();
     const pass = $("authPassword").value;
-    const name = $("authName").value.trim();
     if(!email || !pass || pass.length < 6){ showMessage("Mail gir ve en az 6 karakter şifre yaz."); return; }
     try{
       showMessage("Hesap oluşturuluyor...");
@@ -409,7 +427,14 @@ function exportData(){ const raw=JSON.stringify(data); navigator.clipboard?navig
       user=current;
       if(user){
         showApp();
-        await loadCloud();
+        try{
+          await loadCloud();
+        }catch(e){
+          console.warn("Cloud load failed:", e);
+          data = loadLocal();
+          data.email = user.email || "";
+          render();
+        }
       }else{
         showAuth();
       }
