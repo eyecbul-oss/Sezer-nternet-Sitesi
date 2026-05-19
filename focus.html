@@ -864,6 +864,62 @@ h1{
   .badge-grid,.summary-grid{grid-template-columns:1fr}
 }
 
+
+.cloud-panel{
+  margin-top:20px;
+  padding:26px;
+  border-radius:32px;
+  background:linear-gradient(135deg,rgba(56,189,248,.12),rgba(250,204,21,.07)),rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 18px 42px rgba(0,0,0,.24);
+}
+.cloud-panel h3{
+  font-family:Montserrat,Inter,sans-serif;
+  font-size:28px;
+  margin-bottom:10px;
+}
+.cloud-panel p{
+  color:#dbeafe;
+  line-height:1.65;
+  font-weight:800;
+}
+.cloud-form{
+  margin-top:16px;
+  display:grid;
+  grid-template-columns:1fr auto auto;
+  gap:10px;
+}
+.cloud-form input{
+  padding:14px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(15,23,42,.85);
+  color:white;
+  outline:none;
+}
+.cloud-form button{
+  border:0;
+  border-radius:16px;
+  padding:0 16px;
+  background:var(--gold);
+  color:#111827;
+  font-weight:900;
+}
+.cloud-status{
+  margin-top:14px;
+  padding:14px;
+  border-radius:18px;
+  background:rgba(15,23,42,.72);
+  border:1px solid rgba(255,255,255,.10);
+  color:#dbeafe;
+  font-weight:900;
+  line-height:1.5;
+}
+@media(max-width:980px){
+  .cloud-form{grid-template-columns:1fr}
+  .cloud-form button{min-height:48px}
+}
+
 </style>
 </head>
 
@@ -1004,7 +1060,20 @@ h1{
   </section>
 
 
-  <h2 class="section-title">Kayıt ve Yedek</h2>
+  
+  <h2 class="section-title">Öğrenci Girişi</h2>
+  <section class="cloud-panel">
+    <h3>Mail ile Profil</h3>
+    <p>Öğrenci mail adresini girince çalışma verileri o profile göre ayrı saklanır. Gerçek bulut bağlantısı için Firebase bilgileri eklenince aynı yapı buluta taşınır.</p>
+    <div class="cloud-form">
+      <input id="studentEmail" type="email" placeholder="ogrenci@mail.com">
+      <button onclick="loginStudent()">Profile Geç</button>
+      <button onclick="logoutStudent()">Çıkış</button>
+    </div>
+    <div class="cloud-status" id="cloudStatus">Yerel profil modu aktif.</div>
+  </section>
+
+<h2 class="section-title">Kayıt ve Yedek</h2>
   <section class="app-grid">
     <div class="app-card">
       <h3>Öğrenci Profili</h3>
@@ -1187,6 +1256,51 @@ function selectMusic(key,el){
   if(wasPlaying) playAudio();
 }
 
+
+function safeEmailKey(email){
+  return String(email || "default").trim().toLowerCase().replace(/[^a-z0-9@._-]/g,"_");
+}
+
+let activeEmail = localStorage.getItem("sezrActiveEmail") || "default";
+function storageKey(){
+  return "sezrFocusStats_" + safeEmailKey(activeEmail);
+}
+
+function updateCloudStatus(){
+  const el = document.getElementById("cloudStatus");
+  const input = document.getElementById("studentEmail");
+  if(input) input.value = activeEmail === "default" ? "" : activeEmail;
+  if(el){
+    if(activeEmail === "default"){
+      el.textContent = "Genel yerel profil kullanılıyor. Öğrenci maili girersen veriler o öğrenciye özel saklanır.";
+    }else{
+      el.textContent = "Aktif öğrenci: " + activeEmail + " • Veriler bu profile kaydediliyor.";
+    }
+  }
+}
+
+function loginStudent(){
+  const input = document.getElementById("studentEmail");
+  const email = input.value.trim().toLowerCase();
+  if(!email || !email.includes("@")){
+    alert("Geçerli bir mail adresi gir.");
+    return;
+  }
+  activeEmail = email;
+  localStorage.setItem("sezrActiveEmail", activeEmail);
+  stats = loadStats();
+  renderEverything();
+  updateCloudStatus();
+}
+
+function logoutStudent(){
+  activeEmail = "default";
+  localStorage.setItem("sezrActiveEmail", activeEmail);
+  stats = loadStats();
+  renderEverything();
+  updateCloudStatus();
+}
+
 let totalSeconds = 25 * 60;
 let remaining = totalSeconds;
 let timerId = null;
@@ -1209,7 +1323,7 @@ function defaultStats(){
 
 function loadStats(){
   try{
-    return Object.assign(defaultStats(), JSON.parse(localStorage.getItem("sezrFocusStats") || "{}"));
+    return Object.assign(defaultStats(), JSON.parse(localStorage.getItem(storageKey()) || "{}"));
   }catch(e){
     return defaultStats();
   }
@@ -1218,7 +1332,7 @@ function loadStats(){
 let stats = loadStats();
 
 function saveStats(){
-  localStorage.setItem("sezrFocusStats", JSON.stringify(stats));
+  localStorage.setItem(storageKey(), JSON.stringify(stats));
 }
 
 function ensureToday(){
@@ -1341,9 +1455,7 @@ function resetStats(){
   if(!confirm("Tüm focus istatistikleri sıfırlansın mı?")) return;
   stats = defaultStats();
   saveStats();
-  renderProfile();
-  renderSessions();
-  updateTimer();
+  renderEverything();
 }
 function updateTimer(){
   ensureToday();
@@ -1624,6 +1736,19 @@ function renderExtraPanels(){
   renderSummary();
 }
 
+
+function renderEverything(){
+  renderTasks();
+  renderSessions();
+  renderProfile();
+  renderWeekly();
+  renderDailyProgress();
+  renderHistory();
+  renderExtraPanels();
+  updateTimer();
+  updateCloudStatus();
+}
+
 document.getElementById("goalInput").value = localStorage.getItem("sezrGoal") || "";
 if(localStorage.getItem("sezrGoal")){
   document.getElementById("quoteBox").textContent = "Bugünkü hedef: " + localStorage.getItem("sezrGoal");
@@ -1660,14 +1785,7 @@ for(let i=0;i<28;i++){
 }
 
 loadMusic("rain");
-renderTasks();
-renderSessions();
-renderProfile();
-renderWeekly();
-renderDailyProgress();
-renderHistory();
-renderExtraPanels();
-updateTimer();
+renderEverything();
 </script>
 
 </body>
