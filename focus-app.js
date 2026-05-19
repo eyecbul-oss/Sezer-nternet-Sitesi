@@ -29,6 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let totalSeconds = focusSeconds;
   let remaining = totalSeconds;
   let mode = "login";
+  let saveTimer = null;
+  let saveBusy = false;
 
   function blank(){ return {name:"",email:"",plan:"",notes:[],sessions:[],totalSeconds:0,totalPomodoros:0,days:{}}; }
   function localKey(){ return user ? "sezr_focus_cloud_" + user.uid : "sezr_focus_guest"; }
@@ -57,11 +59,27 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   }
 
-  async function saveCloud(){
+  async function saveCloudNow(){
     saveLocal();
-    if(user && db){
+    if(!user || !db || saveBusy) return;
+    saveBusy = true;
+    try{
       await userDoc().set(data, {merge:true});
+    }catch(e){
+      console.warn("Cloud save delayed:", e);
+    }finally{
+      saveBusy = false;
     }
+  }
+
+  function queueSave(){
+    saveLocal();
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveCloudNow, 1200);
+  }
+
+  async function saveCloud(){
+    queueSave();
   }
 
   async function signIn(){
@@ -189,10 +207,14 @@ document.addEventListener("DOMContentLoaded", () => {
     running=true;
     $("timerStatus").textContent = isBreak ? "Mola" : "Çalışıyor";
     if(isBreak) forceStopAudio(); else playAudio();
-    timerId=setInterval(async ()=>{
+    timerId=setInterval(()=>{
       if(remaining>0){
         remaining--;
-        if(!isBreak){ day().seconds++; data.totalSeconds++; await saveCloud(); }
+        if(!isBreak){
+          day().seconds++;
+          data.totalSeconds++;
+          queueSave();
+        }
         render();
       }else finish();
     },1000);
@@ -203,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(!running) return;
     clearInterval(timerId);
     running=false;
-    if(!isBreak){ day().pauses++; saveCloud(); }
+    if(!isBreak){ day().pauses++; queueSave(); }
     pauseAudio();
     $("timerStatus").textContent="Duraklatıldı";
     render();
@@ -253,7 +275,7 @@ document.addEventListener("DOMContentLoaded", () => {
     data.totalPomodoros++;
     data.sessions.unshift(new Date().toLocaleString("tr-TR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})+" • "+Math.round(focusSeconds/60)+" dk");
     data.sessions=data.sessions.slice(0,8);
-    await saveCloud();
+    queueSave();
 
     if($("autoBreak").checked) startBreak(5);
     else { pauseAudio(); $("successModal").classList.add("show"); $("timerStatus").textContent="Tamamlandı"; render(); }
@@ -363,6 +385,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".break-btn").forEach(btn=>btn.onclick=()=>startBreak(Number(btn.dataset.break)));
   document.querySelectorAll(".track").forEach(btn=>btn.onclick=()=>{ const was=isAudioPlaying; pauseAudio(); setTrack(btn.dataset.track); if(was) playAudio(); });
   document.addEventListener("keydown",e=>{ const tag=(e.target.tagName||"").toLowerCase(); if(tag==="input"||tag==="textarea")return; if(e.code==="Space"){e.preventDefault();toggle();} });
+
+  window.addEventListener("beforeunload", () => {
+    saveLocal();
+  });
 
   if(auth){
     auth.onAuthStateChanged(async current=>{
