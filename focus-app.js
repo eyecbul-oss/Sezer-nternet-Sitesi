@@ -55,14 +55,49 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function playAudio(){ if(!isAudioPlaying) tryAudio(paths(currentTrack)); }
-  function pauseAudio(){ if(isAudioPlaying){ $("focusAudio").pause(); isAudioPlaying=false; document.querySelector(".music-panel").classList.add("paused"); $("trackStatus").textContent="Duraklatıldı"; } }
+  function pauseAudio(){ 
+    if(isAudioPlaying){ 
+      $("focusAudio").pause(); 
+      isAudioPlaying=false; 
+      document.querySelector(".music-panel").classList.add("paused"); 
+      $("trackStatus").textContent="Duraklatıldı"; 
+    } 
+  }
+
+  function playAlarm(){
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if(!AudioContext) return;
+    const ctx = new AudioContext();
+    const gain = ctx.createGain();
+    gain.gain.value = 0.08;
+    gain.connect(ctx.destination);
+
+    let count = 0;
+    const beep = () => {
+      const osc = ctx.createOscillator();
+      osc.type = "sine";
+      osc.frequency.value = 880;
+      osc.connect(gain);
+      osc.start();
+      setTimeout(() => osc.stop(), 260);
+      count++;
+      if(count < 5) setTimeout(beep, 1000);
+      else setTimeout(() => ctx.close(), 1500);
+    };
+    beep();
+  }
   function toggleAudio(){ isAudioPlaying ? pauseAudio() : playAudio(); }
 
   function start(){
     if(running) return;
     running=true;
     $("timerStatus").textContent = isBreak ? "Mola" : "Çalışıyor";
-    playAudio();
+    if(isBreak){
+      pauseAudio();
+      $("trackStatus").textContent = "Mola sırasında müzik kapalı";
+    }else{
+      playAudio();
+    }
     timerId=setInterval(()=>{
       if(remaining>0){
         remaining--;
@@ -103,6 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
     totalSeconds=min*60;
     remaining=totalSeconds;
     $("timerStatus").textContent="Mola";
+    pauseAudio();
+    $("trackStatus").textContent = "Mola sırasında müzik kapalı";
     render();
     start();
   }
@@ -117,6 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
       remaining=totalSeconds;
       $("timerStatus").textContent="Mola bitti";
       pauseAudio();
+      playAlarm();
       render();
       return;
     }
