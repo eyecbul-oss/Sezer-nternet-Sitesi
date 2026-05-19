@@ -920,6 +920,176 @@ h1{
   .cloud-form button{min-height:48px}
 }
 
+
+.settings-fab{
+  position:fixed;
+  right:22px;
+  bottom:92px;
+  z-index:999;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.16);
+  background:linear-gradient(180deg,rgba(250,204,21,.95),rgba(234,179,8,.95));
+  color:#111827;
+  font-size:24px;
+  font-weight:900;
+  box-shadow:0 18px 45px rgba(250,204,21,.25);
+  cursor:pointer;
+}
+.settings-panel{
+  position:fixed;
+  right:22px;
+  bottom:160px;
+  width:min(420px,calc(100vw - 28px));
+  max-height:72vh;
+  overflow:auto;
+  z-index:998;
+  display:none;
+  padding:22px;
+  border-radius:28px;
+  background:rgba(2,6,23,.94);
+  border:1px solid rgba(255,255,255,.16);
+  backdrop-filter:blur(22px);
+  box-shadow:0 24px 80px rgba(0,0,0,.42);
+}
+.settings-panel.show{display:block}
+.settings-panel h3{
+  font-family:Montserrat,Inter,sans-serif;
+  font-size:24px;
+  margin-bottom:12px;
+}
+.settings-panel p{
+  color:#dbeafe;
+  line-height:1.55;
+  font-weight:800;
+  margin-bottom:12px;
+}
+.settings-panel input{
+  width:100%;
+  padding:14px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(15,23,42,.86);
+  color:white;
+  margin-bottom:10px;
+}
+.settings-panel .setting-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:14px;
+}
+.settings-panel button{
+  min-height:48px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(15,23,42,.86);
+  color:white;
+  font-weight:900;
+  cursor:pointer;
+}
+.settings-panel button.primary{
+  background:var(--gold);
+  color:#111827;
+  border-color:var(--gold);
+}
+.settings-info{
+  padding:12px;
+  border-radius:16px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  color:#dbeafe;
+  font-weight:800;
+  line-height:1.5;
+  margin-bottom:12px;
+}
+@media(max-width:980px){
+  .settings-fab{right:16px;bottom:86px}
+  .settings-panel{right:14px;bottom:150px}
+}
+
+
+.login-chip{
+  position:fixed;
+  left:22px;
+  bottom:92px;
+  z-index:999;
+  min-height:54px;
+  max-width:320px;
+  padding:0 18px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:rgba(2,6,23,.88);
+  border:1px solid rgba(255,255,255,.16);
+  color:#dbeafe;
+  font-weight:900;
+  box-shadow:0 18px 45px rgba(0,0,0,.35);
+  backdrop-filter:blur(18px);
+}
+.login-dot{
+  width:12px;height:12px;border-radius:50%;
+  background:#22c55e;
+  box-shadow:0 0 18px rgba(34,197,94,.7);
+}
+.settings-tabs{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:14px 0;
+}
+.settings-tab{
+  min-height:42px!important;
+  font-size:13px;
+}
+.settings-tab.active{
+  background:var(--gold)!important;
+  color:#111827!important;
+  border-color:var(--gold)!important;
+}
+.settings-view{display:none}
+.settings-view.active{display:block}
+.profile-list{
+  display:grid;
+  gap:8px;
+  margin-top:10px;
+}
+.profile-pill{
+  padding:12px;
+  border-radius:16px;
+  background:rgba(15,23,42,.78);
+  border:1px solid rgba(255,255,255,.11);
+  color:#dbeafe;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.profile-pill button{
+  min-height:34px!important;
+  padding:0 10px;
+  border-radius:12px;
+  background:rgba(250,204,21,.14);
+  color:#facc15;
+}
+.pin-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.settings-small{
+  color:#94a3b8!important;
+  font-size:13px!important;
+  line-height:1.45!important;
+}
+@media(max-width:980px){
+  .login-chip{left:14px;right:82px;bottom:86px;max-width:none;font-size:13px}
+  .settings-tabs,.pin-row{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 
@@ -1061,41 +1231,6 @@ h1{
 
 
   
-  <h2 class="section-title">Öğrenci Girişi</h2>
-  <section class="cloud-panel">
-    <h3>Mail ile Profil</h3>
-    <p>Öğrenci mail adresini girince çalışma verileri o profile göre ayrı saklanır. Gerçek bulut bağlantısı için Firebase bilgileri eklenince aynı yapı buluta taşınır.</p>
-    <div class="cloud-form">
-      <input id="studentEmail" type="email" placeholder="ogrenci@mail.com">
-      <button onclick="loginStudent()">Profile Geç</button>
-      <button onclick="logoutStudent()">Çıkış</button>
-    </div>
-    <div class="cloud-status" id="cloudStatus">Yerel profil modu aktif.</div>
-  </section>
-
-<h2 class="section-title">Kayıt ve Yedek</h2>
-  <section class="app-grid">
-    <div class="app-card">
-      <h3>Öğrenci Profili</h3>
-      <p>Bu bilgiler aynı cihaz ve tarayıcıda saklanır.</p>
-      <div class="task-input">
-        <input id="studentName" placeholder="Öğrenci adı">
-        <button onclick="saveStudent()">Kaydet</button>
-      </div>
-      <div class="session-list" id="profileInfo"></div>
-    </div>
-
-    <div class="app-card">
-      <h3>Yedekleme</h3>
-      <p>Bilgileri başka cihaza taşımak için dışa aktar / içe aktar.</p>
-      <div class="hero-actions" style="margin-top:15px">
-        <button class="btn" onclick="exportData()">Dışa Aktar</button>
-        <button class="btn" onclick="importData()">İçe Aktar</button>
-        <button class="btn" onclick="resetStats()">İstatistikleri Sıfırla</button>
-      </div>
-    </div>
-  </section>
-
   <h2 class="section-title">Gerçek İstatistikler</h2>
   <section class="stats-grid">
     <div class="stat"><b id="doneCount">0</b><span>Bugünkü Pomodoro</span></div>
@@ -1150,6 +1285,61 @@ h1{
 
 
 </div>
+
+
+
+<button class="settings-fab" onclick="toggleSettings()">⚙️</button>
+<div class="login-chip" id="loginChip"><span class="login-dot"></span><span>Genel Profil</span></div>
+
+<section class="settings-panel" id="settingsPanel">
+  <h3>Giriş ve Ayarlar</h3>
+  <p>Öğrenci profili seç, verileri ayrı ayrı sakla ve gerektiğinde yedekle.</p>
+
+  <div class="settings-tabs">
+    <button class="settings-tab active" onclick="showSettingsTab('profile',this)">Profil</button>
+    <button class="settings-tab" onclick="showSettingsTab('security',this)">Güvenlik</button>
+    <button class="settings-tab" onclick="showSettingsTab('backup',this)">Yedek</button>
+  </div>
+
+  <div class="settings-view active" id="tab-profile">
+    <input id="studentEmail" type="email" placeholder="Öğrenci mail adresi">
+    <input id="studentName" placeholder="Öğrenci adı">
+    <div class="setting-actions">
+      <button class="primary" onclick="loginStudentAdvanced()">Profile Geç</button>
+      <button onclick="logoutStudent()">Genel Profil</button>
+    </div>
+    <div class="settings-info" id="cloudStatus">Yerel profil modu aktif.</div>
+    <div class="settings-info" id="profileInfo">Profil bilgisi bekleniyor.</div>
+    <p class="settings-small">Not: Bu sürüm aynı cihaz ve tarayıcıda kayıt tutar. Firebase bağlanınca gerçek bulut senkronizasyonuna geçer.</p>
+    <div class="profile-list" id="profileList"></div>
+  </div>
+
+  <div class="settings-view" id="tab-security">
+    <p>İstersen öğrencinin profilini basit PIN ile ayırabilirsin. PIN bu cihazda saklanır.</p>
+    <div class="pin-row">
+      <input id="studentPin" type="password" placeholder="PIN oluştur / gir">
+      <input id="studentPinAgain" type="password" placeholder="PIN tekrar">
+    </div>
+    <div class="setting-actions">
+      <button class="primary" onclick="savePin()">PIN Kaydet</button>
+      <button onclick="clearPin()">PIN Kaldır</button>
+    </div>
+    <div class="settings-info" id="pinStatus">PIN isteğe bağlıdır.</div>
+  </div>
+
+  <div class="settings-view" id="tab-backup">
+    <p>Yedek kodu ile verileri başka cihaza taşıyabilirsin.</p>
+    <div class="setting-actions">
+      <button onclick="exportData()">Yedek Kodu Al</button>
+      <button onclick="importData()">Yedekten Yükle</button>
+    </div>
+    <div class="setting-actions">
+      <button onclick="downloadBackup()">Dosya İndir</button>
+      <button onclick="resetStats()">İstatistikleri Sıfırla</button>
+    </div>
+    <div class="settings-info">Yedek; profil, süre, görevler, seanslar ve notları içerir.</div>
+  </div>
+</section>
 
 <nav class="quick">
   <a href="index.html"><span>🏠</span>Ana</a>
@@ -1786,6 +1976,167 @@ for(let i=0;i<28;i++){
 
 loadMusic("rain");
 renderEverything();
+
+function toggleSettings(){
+  const panel = document.getElementById("settingsPanel");
+  if(panel) panel.classList.toggle("show");
+}
+
+
+if(typeof updateCloudStatus !== "function"){
+  function updateCloudStatus(){
+    const el=document.getElementById("cloudStatus");
+    if(el) el.textContent="Yerel kayıt aktif. Firebase bağlanınca bulut senkronizasyonu açılacak.";
+  }
+}
+if(typeof loginStudent !== "function"){
+  function loginStudent(){alert("Bu sürümde mail profili yerel kayıt olarak hazırlanmıştır.");}
+}
+if(typeof logoutStudent !== "function"){
+  function logoutStudent(){alert("Genel profile geçildi.");}
+}
+
+
+function showSettingsTab(name,btn){
+  document.querySelectorAll(".settings-tab").forEach(function(b){b.classList.remove("active");});
+  document.querySelectorAll(".settings-view").forEach(function(v){v.classList.remove("active");});
+  btn.classList.add("active");
+  const view = document.getElementById("tab-"+name);
+  if(view) view.classList.add("active");
+}
+
+function knownProfiles(){
+  try{return JSON.parse(localStorage.getItem("sezrKnownProfiles") || "[]");}
+  catch(e){return [];}
+}
+
+function saveKnownProfile(email,name){
+  if(!email || email === "default") return;
+  let list = knownProfiles().filter(function(p){return p.email !== email;});
+  list.unshift({email:email,name:name || ""});
+  list = list.slice(0,8);
+  localStorage.setItem("sezrKnownProfiles", JSON.stringify(list));
+}
+
+function renderProfileList(){
+  const box = document.getElementById("profileList");
+  if(!box) return;
+  const list = knownProfiles();
+  box.innerHTML = "";
+  if(list.length === 0){
+    box.innerHTML = '<div class="profile-pill"><span>Kayıtlı profil yok</span></div>';
+    return;
+  }
+  list.forEach(function(p){
+    const div = document.createElement("div");
+    div.className = "profile-pill";
+    div.innerHTML = '<span>'+(p.name ? p.name+" • " : "")+p.email+'</span><button onclick="quickLoginProfile(\''+p.email.replace(/'/g,"")+'\')">Geç</button>';
+    box.appendChild(div);
+  });
+}
+
+function updateLoginChip(){
+  const chip = document.getElementById("loginChip");
+  if(!chip) return;
+  const label = activeEmail && activeEmail !== "default" ? activeEmail : "Genel Profil";
+  chip.innerHTML = '<span class="login-dot"></span><span>'+label+'</span>';
+}
+
+function quickLoginProfile(email){
+  activeEmail = email;
+  localStorage.setItem("sezrActiveEmail", activeEmail);
+  stats = loadStats();
+  renderEverything();
+  updateLoginChip();
+  toggleSettings();
+}
+
+function loginStudentAdvanced(){
+  const emailInput = document.getElementById("studentEmail");
+  const nameInput = document.getElementById("studentName");
+  const email = emailInput.value.trim().toLowerCase();
+  if(!email || !email.includes("@")){
+    alert("Geçerli bir mail adresi gir.");
+    return;
+  }
+
+  const savedPin = localStorage.getItem("sezrPin_" + safeEmailKey(email));
+  const enteredPin = document.getElementById("studentPin") ? document.getElementById("studentPin").value : "";
+
+  if(savedPin && savedPin !== enteredPin){
+    alert("PIN hatalı.");
+    return;
+  }
+
+  activeEmail = email;
+  localStorage.setItem("sezrActiveEmail", activeEmail);
+  stats = loadStats();
+  if(nameInput.value.trim()){
+    stats.studentName = nameInput.value.trim();
+    saveStats();
+  }
+  saveKnownProfile(activeEmail, stats.studentName);
+  renderEverything();
+  renderProfileList();
+  updateLoginChip();
+}
+
+function savePin(){
+  const email = (document.getElementById("studentEmail").value || activeEmail || "").trim().toLowerCase();
+  const p1 = document.getElementById("studentPin").value;
+  const p2 = document.getElementById("studentPinAgain").value;
+  const status = document.getElementById("pinStatus");
+  if(!email || email === "default" || !email.includes("@")){
+    status.textContent = "PIN için önce öğrenci maili gir.";
+    return;
+  }
+  if(!p1 || p1.length < 4){
+    status.textContent = "PIN en az 4 karakter olsun.";
+    return;
+  }
+  if(p1 !== p2){
+    status.textContent = "PIN tekrar aynı değil.";
+    return;
+  }
+  localStorage.setItem("sezrPin_" + safeEmailKey(email), p1);
+  status.textContent = "PIN kaydedildi.";
+}
+
+function clearPin(){
+  const email = (document.getElementById("studentEmail").value || activeEmail || "").trim().toLowerCase();
+  if(email && email !== "default"){
+    localStorage.removeItem("sezrPin_" + safeEmailKey(email));
+  }
+  const status = document.getElementById("pinStatus");
+  if(status) status.textContent = "PIN kaldırıldı.";
+}
+
+function downloadBackup(){
+  const data = JSON.stringify(stats,null,2);
+  const blob = new Blob([data], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "sezr-focus-yedek-" + (activeEmail || "genel") + ".json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+const oldUpdateCloudStatus = typeof updateCloudStatus === "function" ? updateCloudStatus : null;
+updateCloudStatus = function(){
+  const el = document.getElementById("cloudStatus");
+  const input = document.getElementById("studentEmail");
+  const name = document.getElementById("studentName");
+  if(input) input.value = activeEmail === "default" ? "" : activeEmail;
+  if(name) name.value = stats && stats.studentName ? stats.studentName : "";
+  if(el){
+    if(activeEmail === "default") el.textContent = "Genel yerel profil kullanılıyor.";
+    else el.textContent = "Aktif öğrenci: " + activeEmail + " • Veriler bu profile kaydediliyor.";
+  }
+  updateLoginChip();
+  renderProfileList();
+};
+
 </script>
 
 </body>
