@@ -312,7 +312,9 @@ document.addEventListener("DOMContentLoaded", () => {
     $("mainToggleBtn").textContent = running ? "Duraklat" : (remaining<totalSeconds ? "Devam Et" : "Başlat");
     $("mainToggleBtn").classList.toggle("running", running);
     $("savedPlan").textContent = data.plan || "Henüz plan yazılmadı.";
-    $("planInput").value = data.plan || "";
+    if(document.activeElement !== $("planInput")){
+      $("planInput").value = data.plan || "";
+    }
     $("aiAdvice").textContent = advice();
     $("todayMinutes").textContent = min+" dk";
     $("todayPomodoros").textContent = d.pomodoros;
