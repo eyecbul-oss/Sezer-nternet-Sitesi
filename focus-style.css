@@ -658,3 +658,28 @@ body:after{content:"";position:fixed;inset:0;z-index:-4;background-image:linear-
     grid-template-columns:1fr;
   }
 }
+
+
+/* Stable login flow */
+.guest-btn{
+  width:100%;
+  min-height:50px;
+  margin-top:10px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(15,23,42,.86);
+  color:#dbeafe;
+  font-weight:900;
+  cursor:pointer;
+}
+.guest-btn:hover,
+.auth-link:hover{
+  border-color:rgba(250,204,21,.35);
+  color:#fde68a;
+}
+.auth-message.success{
+  color:#bbf7d0;
+}
+.auth-message.error{
+  color:#fecaca;
+}

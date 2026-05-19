@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const firebaseReady = !!(cfg.firebaseEnabled && window.firebase && cfg.firebase && cfg.firebase.apiKey);
 
   let app = null, auth = null, db = null, user = null;
+  let guestMode = localStorage.getItem("sezr_guest_mode") === "1";
   if(firebaseReady){
     app = firebase.initializeApp(cfg.firebase);
     auth = firebase.auth();
@@ -41,11 +42,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function day(){ const k=today(); if(!data.days[k]) data.days[k]={seconds:0,pomodoros:0,pauses:0}; return data.days[k]; }
   function fmt(sec){ const m=Math.floor(sec/60), s=sec%60; return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0"); }
   function paths(track){ const f=tracks[track].file; return ["music/"+f,f,"./music/"+f,"./"+f]; }
-  function showMessage(msg){ $("authMessage").textContent = msg || ""; }
+  function showMessage(msg,type=""){
+    const el = $("authMessage");
+    if(!el) return;
+    el.textContent = msg || "";
+    el.className = "auth-message" + (type ? " " + type : "");
+  }
 
   async function loadCloud(){
     data = loadLocal();
-    if(user && db){
+    if(!guestMode && user && db){
       try{
         const snap = await userDoc().get();
         if(snap.exists){
@@ -89,25 +95,22 @@ document.addEventListener("DOMContentLoaded", () => {
   async function signIn(){
     const email = $("authEmail").value.trim().toLowerCase();
     const pass = $("authPassword").value;
-    if(!email || !pass){ showMessage("Mail ve şifre gir."); return; }
-    if(!auth){ showMessage("Firebase bağlantısı hazır değil."); return; }
+    if(!email || !pass){ showMessage("Mail ve şifre gir.","error"); return; }
+    if(!auth){ showMessage("Firebase hazır değil. Misafir olarak devam edebilirsin.","error"); return; }
 
     try{
-      showMessage("Giriş yapılıyor...");
       $("authSubmit").disabled = true;
-
+      showMessage("Giriş yapılıyor...");
       await Promise.race([
         auth.signInWithEmailAndPassword(email, pass),
-        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 10000))
+        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 12000))
       ]);
-
-      showMessage("");
+      localStorage.removeItem("sezr_guest_mode");
+      guestMode = false;
+      showMessage("Giriş başarılı.","success");
     }catch(e){
-      if(e.message === "timeout"){
-        showMessage("Giriş uzun sürdü. Email/Password açık mı ve site internetten güncel yüklendi mi kontrol et.");
-      }else{
-        showMessage(errorText(e));
-      }
+      if(e.message === "timeout") showMessage("Giriş uzun sürdü. Bağlantıyı kontrol et veya misafir devam et.","error");
+      else showMessage(errorText(e),"error");
     }finally{
       $("authSubmit").disabled = false;
     }
@@ -116,28 +119,48 @@ document.addEventListener("DOMContentLoaded", () => {
   async function register(){
     const email = $("authEmail").value.trim().toLowerCase();
     const pass = $("authPassword").value;
-    if(!email || !pass || pass.length < 6){ showMessage("Mail gir ve en az 6 karakter şifre yaz."); return; }
-    try{
-      showMessage("Hesap oluşturuluyor...");
-      const result = await auth.createUserWithEmailAndPassword(email, pass);
+    if(!email || !pass || pass.length < 6){ showMessage("Mail gir ve en az 6 karakter şifre yaz.","error"); return; }
+    if(!auth){ showMessage("Firebase hazır değil. Misafir olarak devam edebilirsin.","error"); return; }
 
+    try{
+      $("authSubmit").disabled = true;
+      showMessage("Hesap oluşturuluyor...");
+      const result = await Promise.race([
+        auth.createUserWithEmailAndPassword(email, pass),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 12000))
+      ]);
+      localStorage.removeItem("sezr_guest_mode");
+      guestMode = false;
+      user = result.user;
       data = blank();
       data.email = email;
-      data.name = "";
-      user = result.user;
       await saveCloud();
+      showMessage("Hesap oluşturuldu.","success");
     }catch(e){
-      showMessage(errorText(e));
+      if(e.message === "timeout") showMessage("Hesap oluşturma uzun sürdü. Email/Password açık mı kontrol et.","error");
+      else showMessage(errorText(e),"error");
+    }finally{
+      $("authSubmit").disabled = false;
     }
   }
 
   async function forgot(){
     const email = $("authEmail").value.trim().toLowerCase();
-    if(!email){ showMessage("Şifre sıfırlamak için mail adresini yaz."); return; }
+    if(!email){ showMessage("Şifre sıfırlamak için mail adresini yaz.","error"); return; }
     try{
       await auth.sendPasswordResetEmail(email);
-      showMessage("Şifre sıfırlama maili gönderildi.");
-    }catch(e){ showMessage(errorText(e)); }
+      showMessage("Şifre sıfırlama maili gönderildi.","success");
+    }catch(e){ showMessage(errorText(e),"error"); }
+  }
+
+
+  function continueGuest(){
+    guestMode = true;
+    user = null;
+    localStorage.setItem("sezr_guest_mode","1");
+    data = loadLocal();
+    showApp();
+    render();
   }
 
   function errorText(e){
@@ -168,6 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("authScreen").classList.remove("hidden");
     $("appPage").classList.add("hidden");
     $("settingsBtn").classList.add("hidden");
+    $("settingsPanel").classList.remove("show");
   }
 
   function setTrack(track){
@@ -669,7 +693,7 @@ document.addEventListener("DOMContentLoaded", () => {
       $("planProgressFill").style.width = planPct + "%";
       $("planProgressText").textContent = "Plan ilerlemesi: %" + planPct;
     }
-    $("accountEmail").textContent = user ? user.email : "";
+    $("accountEmail").textContent = guestMode ? "Misafir mod" : (user ? user.email : "");
 renderNotes();
     renderSessions();
   }
@@ -825,6 +849,7 @@ function exportData(){ const raw=JSON.stringify(data); navigator.clipboard?navig
   $("registerTab").onclick=()=>setAuthMode("register");
   $("authSubmit").onclick=()=> mode==="login" ? signIn() : register();
   $("forgotBtn").onclick=forgot;
+  $("guestBtn").onclick=continueGuest;
   $("mainToggleBtn").onclick=toggle;
   $("resetBtn").onclick=reset;
   $("addTaskBtn").onclick=addDailyTask;
@@ -841,7 +866,12 @@ function exportData(){ const raw=JSON.stringify(data); navigator.clipboard?navig
   $("volumeRange").oninput=e=>{ $("focusAudio").volume=e.target.value/100; $("volumeText").textContent="🔊 "+e.target.value+"%"; };
   $("settingsBtn").onclick=()=>$("settingsPanel").classList.toggle("show");
   $("closeSettingsBtn").onclick=()=>$("settingsPanel").classList.remove("show");
-  $("logoutBtn").onclick=()=>auth.signOut();
+  $("logoutBtn").onclick=()=>{
+    localStorage.removeItem("sezr_guest_mode");
+    guestMode = false;
+    if(auth && user) auth.signOut();
+    else showAuth();
+  };
   $("closeModalBtn").onclick=()=>{ $("successModal").classList.remove("show"); reset(); };
   document.querySelectorAll(".mode").forEach(btn=>btn.onclick=()=>{ document.querySelectorAll(".mode").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); focusSeconds=Number(btn.dataset.min)*60; totalSeconds=focusSeconds; remaining=totalSeconds; reset(); });
   document.querySelectorAll(".break-btn").forEach(btn=>btn.onclick=()=>startBreak(Number(btn.dataset.break)));
@@ -871,8 +901,13 @@ function exportData(){ const raw=JSON.stringify(data); navigator.clipboard?navig
     saveLocal();
   });
 
+  if(guestMode){
+    continueGuest();
+  }
+
   if(auth){
     auth.onAuthStateChanged(async current=>{
+      if(guestMode) return;
       user=current;
       if(user){
         showApp();
@@ -889,7 +924,7 @@ function exportData(){ const raw=JSON.stringify(data); navigator.clipboard?navig
       }
     });
   }else{
-    showMessage("Firebase yüklenemedi. İnternet bağlantısını veya config dosyasını kontrol et.");
+    if(!guestMode) showMessage("Firebase yüklenemedi. Misafir olarak devam edebilirsin.","error");
   }
 
   setInterval(()=>{ 

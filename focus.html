@@ -16,21 +16,22 @@
   <section id="authScreen" class="auth-screen">
     <div class="auth-card">
       <div class="auth-brand">Sez<span>R</span> Focus</div>
-      <h1>Çalışma hesabına giriş yap</h1>
-      <p>Mail ve şifrenle giriş yap.</p>
+      <h1>Focus hesabına giriş yap</h1>
+      <p>Mail ve şifrenle giriş yap. Hesabın açık kalır.</p>
 
       <div class="auth-tabs">
-        <button id="loginTab" class="active">Giriş Yap</button>
-        <button id="registerTab">Hesap Oluştur</button>
+        <button id="loginTab" class="active">Giriş</button>
+        <button id="registerTab">Yeni Hesap</button>
       </div>
 
       <label>Mail adresi</label>
       <input id="authEmail" type="email" placeholder="ogrenci@mail.com" autocomplete="email">
 
       <label>Şifre</label>
-      <input id="authPassword" type="password" placeholder="En az 6 karakter" autocomplete="current-password">
+      <input id="authPassword" type="password" placeholder="Şifre" autocomplete="current-password">
 
-            <button id="authSubmit" class="auth-submit">Giriş Yap</button>
+      <button id="authSubmit" class="auth-submit">Giriş Yap</button>
+      <button id="guestBtn" class="guest-btn">Misafir Olarak Devam Et</button>
       <button id="forgotBtn" class="auth-link">Şifremi unuttum</button>
 
       <div id="authMessage" class="auth-message"></div>
