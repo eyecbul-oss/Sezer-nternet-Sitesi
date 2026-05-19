@@ -150,6 +150,41 @@
       <div class="stat"><b id="streakDays">0</b><span>Çalışma serisi</span></div>
     </section>
 
+    <section id="examCountdownPanel" class="exam-panel">
+      <div class="exam-head">
+        <div>
+          <h2>Sınav Sayacı</h2>
+          <p id="examSubtitle">Sınava kalan süre</p>
+        </div>
+        <button id="toggleExamBtn">Gizle</button>
+      </div>
+
+      <div id="examContent">
+        <div class="exam-controls">
+          <select id="examGroupSelect">
+            <option value="YKS">YKS Grubu</option>
+            <option value="LGS">LGS</option>
+            <option value="KPSS">KPSS</option>
+            <option value="DGS">DGS</option>
+          </select>
+
+          <select id="examTypeSelect"></select>
+
+          <input id="examDateInput" type="date">
+
+          <button id="saveExamBtn">Kaydet</button>
+        </div>
+
+        <div class="exam-counter">
+          <div><b id="examDays">0</b><span>Gün</span></div>
+          <div><b id="examHours">0</b><span>Saat</span></div>
+          <div><b id="examMinutes">0</b><span>Dakika</span></div>
+        </div>
+
+        <div id="examAdvice" class="exam-advice">Sınav seç ve kaydet.</div>
+      </div>
+    </section>
+
     <section class="weekly-panel">
       <div class="weekly-head">
         <h2>Haftalık Özet</h2>

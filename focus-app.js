@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let saveTimer = null;
   let saveBusy = false;
 
-  function blank(){ return {name:"",email:"",plan:"",selectedSubject:"",dailyTarget:60,notes:[],sessions:[],planHistory:[],totalSeconds:0,totalPomodoros:0,days:{}}; }
+  function blank(){ return {name:"",email:"",plan:"",selectedSubject:"",dailyTarget:60,exam:{group:"YKS",type:"TYT",date:"2026-06-20",hidden:false},notes:[],sessions:[],planHistory:[],totalSeconds:0,totalPomodoros:0,days:{}}; }
   function localKey(){ return user ? "sezr_focus_cloud_" + user.uid : "sezr_focus_guest"; }
   function saveLocal(){ localStorage.setItem(localKey(), JSON.stringify(data)); }
   function loadLocal(){ try{return Object.assign(blank(), JSON.parse(localStorage.getItem(localKey()) || "{}"));}catch{return blank();} }
@@ -337,6 +337,132 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
+
+  const examOptions = {
+    YKS: [
+      {value:"TYT", label:"TYT", date:"2026-06-20"},
+      {value:"AYT", label:"AYT", date:"2026-06-21"},
+      {value:"YDT", label:"YDT / Dil", date:"2026-06-21"}
+    ],
+    LGS: [
+      {value:"LGS", label:"LGS", date:"2026-06-14"}
+    ],
+    KPSS: [
+      {value:"KPSS", label:"KPSS", date:"2026-09-06"}
+    ],
+    DGS: [
+      {value:"DGS", label:"DGS", date:"2026-07-19"}
+    ]
+  };
+
+  function ensureExam(){
+    data.exam = data.exam || {group:"YKS",type:"TYT",date:"2026-06-20",hidden:false};
+    if(!data.exam.group) data.exam.group = "YKS";
+    if(!data.exam.type) data.exam.type = "TYT";
+    if(!data.exam.date) data.exam.date = "2026-06-20";
+    if(typeof data.exam.hidden !== "boolean") data.exam.hidden = false;
+  }
+
+  function renderExamTypeOptions(){
+    ensureExam();
+    const typeSelect = $("examTypeSelect");
+    if(!typeSelect) return;
+    const group = data.exam.group || "YKS";
+    const opts = examOptions[group] || examOptions.YKS;
+    typeSelect.innerHTML = "";
+    opts.forEach(opt=>{
+      const o = document.createElement("option");
+      o.value = opt.value;
+      o.textContent = opt.label;
+      typeSelect.appendChild(o);
+    });
+    if(!opts.some(x=>x.value === data.exam.type)){
+      data.exam.type = opts[0].value;
+      data.exam.date = opts[0].date;
+    }
+    typeSelect.value = data.exam.type;
+  }
+
+  function renderExamCountdown(){
+    ensureExam();
+    const panel = $("examCountdownPanel");
+    if(!panel) return;
+
+    renderExamTypeOptions();
+
+    $("examGroupSelect").value = data.exam.group;
+    $("examDateInput").value = data.exam.date;
+    panel.classList.toggle("collapsed", data.exam.hidden);
+    $("toggleExamBtn").textContent = data.exam.hidden ? "Göster" : "Gizle";
+
+    const label = (examOptions[data.exam.group] || []).find(x=>x.value === data.exam.type)?.label || data.exam.type;
+    $("examSubtitle").textContent = label + " için kalan süre";
+
+    const target = new Date(data.exam.date + "T10:00:00");
+    const diff = target.getTime() - Date.now();
+
+    if(diff <= 0){
+      $("examDays").textContent = "0";
+      $("examHours").textContent = "0";
+      $("examMinutes").textContent = "0";
+      $("examAdvice").textContent = "Seçilen tarih geçmiş görünüyor. Yeni tarih seçebilirsin.";
+      return;
+    }
+
+    const totalMinutes = Math.floor(diff / 60000);
+    const days = Math.floor(totalMinutes / (60*24));
+    const hours = Math.floor((totalMinutes % (60*24)) / 60);
+    const minutes = totalMinutes % 60;
+
+    $("examDays").textContent = days;
+    $("examHours").textContent = hours;
+    $("examMinutes").textContent = minutes;
+
+    let advice = "Bugün küçük ama net bir çalışma planı seç.";
+    if(days > 120) advice = "Zaman var. Konu eksiklerini kapatmaya odaklan.";
+    else if(days > 60) advice = "Deneme + konu tekrarı dengesini kur.";
+    else if(days > 30) advice = "Yanlış analizi ve süre yönetimine ağırlık ver.";
+    else if(days > 7) advice = "Yeni konu azalt, tekrar ve deneme analizini artır.";
+    else advice = "Son hafta: hafif tekrar, uyku düzeni ve moral önemli.";
+
+    $("examAdvice").textContent = advice;
+  }
+
+  async function saveExamSettings(){
+    ensureExam();
+    data.exam.group = $("examGroupSelect").value;
+    data.exam.type = $("examTypeSelect").value;
+    data.exam.date = $("examDateInput").value || data.exam.date;
+    await saveCloud();
+    render();
+  }
+
+  async function changeExamGroup(){
+    ensureExam();
+    data.exam.group = $("examGroupSelect").value;
+    const first = examOptions[data.exam.group][0];
+    data.exam.type = first.value;
+    data.exam.date = first.date;
+    await saveCloud();
+    render();
+  }
+
+  async function changeExamType(){
+    ensureExam();
+    data.exam.type = $("examTypeSelect").value;
+    const found = (examOptions[data.exam.group] || []).find(x=>x.value === data.exam.type);
+    if(found) data.exam.date = found.date;
+    await saveCloud();
+    render();
+  }
+
+  async function toggleExamPanel(){
+    ensureExam();
+    data.exam.hidden = !data.exam.hidden;
+    await saveCloud();
+    render();
+  }
+
   function last7Days(){
     const arr = [];
     const now = new Date();
@@ -588,6 +714,10 @@ function exportData(){ const raw=JSON.stringify(data); navigator.clipboard?navig
   $("completePlanBtn").onclick=togglePlanDone;
   if($("clearPlanBtn")) $("clearPlanBtn").onclick=clearPlan;
   if($("dailyTargetSelect")) $("dailyTargetSelect").onchange=changeDailyTarget;
+  if($("examGroupSelect")) $("examGroupSelect").onchange=changeExamGroup;
+  if($("examTypeSelect")) $("examTypeSelect").onchange=changeExamType;
+  if($("saveExamBtn")) $("saveExamBtn").onclick=saveExamSettings;
+  if($("toggleExamBtn")) $("toggleExamBtn").onclick=toggleExamPanel;
   document.querySelectorAll(".subject-tag").forEach(btn=>{
     btn.onclick=()=>applySubject(btn.dataset.subject);
   });
@@ -641,6 +771,10 @@ function exportData(){ const raw=JSON.stringify(data); navigator.clipboard?navig
   }else{
     showMessage("Firebase yüklenemedi. İnternet bağlantısını veya config dosyasını kontrol et.");
   }
+
+  setInterval(()=>{ 
+    if($("examCountdownPanel")) renderExamCountdown(); 
+  }, 60000);
 
   ambience();
   setTrack("rain");
