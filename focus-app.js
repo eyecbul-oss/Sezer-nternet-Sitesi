@@ -1,9 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
   const $ = id => document.getElementById(id);
-  const on = (id, event, fn) => {
-    const el = $(id);
-    if(el) el.addEventListener(event, fn);
-  };
+  const cfg = window.SEZR_FOCUS_CONFIG || {};
+  const firebaseReady = !!(cfg.firebaseEnabled && window.firebase && cfg.firebase && cfg.firebase.apiKey);
+
+  let app = null, auth = null, db = null, user = null;
+  if(firebaseReady){
+    app = firebase.initializeApp(cfg.firebase);
+    auth = firebase.auth();
+    db = firebase.firestore();
+  }
 
   const tracks = {
     rain:{title:"Rain Focus",file:"focus-rain.mp3",theme:"theme-rain"},
@@ -14,12 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fire:{title:"Fire",file:"focus-fire.mp3",theme:"theme-fire"}
   };
 
-
-  const cloudConfig = window.SEZR_FOCUS_CONFIG || { firebaseEnabled:false };
-  const cloudReady = !!(cloudConfig.firebaseEnabled && cloudConfig.firebase && cloudConfig.firebase.apiKey);
-
-  let profile = localStorage.getItem("sezr_focus_profile") || "default";
-  let data = load();
+  let data = blank();
   let currentTrack = "rain";
   let running = false;
   let isBreak = false;
@@ -28,24 +28,112 @@ document.addEventListener("DOMContentLoaded", () => {
   let focusSeconds = 25 * 60;
   let totalSeconds = focusSeconds;
   let remaining = totalSeconds;
+  let mode = "login";
 
-  function key(){ return "sezr_focus_data_" + String(profile).replace(/[^a-z0-9@._-]/gi,"_"); }
+  function blank(){ return {name:"",email:"",plan:"",notes:[],sessions:[],totalSeconds:0,totalPomodoros:0,days:{}}; }
+  function localKey(){ return user ? "sezr_focus_cloud_" + user.uid : "sezr_focus_guest"; }
+  function saveLocal(){ localStorage.setItem(localKey(), JSON.stringify(data)); }
+  function loadLocal(){ try{return Object.assign(blank(), JSON.parse(localStorage.getItem(localKey()) || "{}"));}catch{return blank();} }
+  function userDoc(){ return db.collection("focusUsers").doc(user.uid); }
   function today(){ return new Date().toISOString().slice(0,10); }
-  function blank(){ return {name:"",email:profile==="default"?"":profile,plan:"",notes:[],sessions:[],totalSeconds:0,totalPomodoros:0,days:{}}; }
-  function load(){ try{return Object.assign(blank(), JSON.parse(localStorage.getItem(key()) || "{}"));}catch{return blank();} }
-  function save(){ 
-    localStorage.setItem(key(), JSON.stringify(data)); 
-    cloudSavePlaceholder();
-  }
-
-  function cloudSavePlaceholder(){
-    if(!cloudReady) return;
-    // Firebase Firestore bağlantısı burada aktif edilecek.
-    // Şimdilik yerel kayıt korunur.
-  }
   function day(){ const k=today(); if(!data.days[k]) data.days[k]={seconds:0,pomodoros:0,pauses:0}; return data.days[k]; }
   function fmt(sec){ const m=Math.floor(sec/60), s=sec%60; return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0"); }
   function paths(track){ const f=tracks[track].file; return ["music/"+f,f,"./music/"+f,"./"+f]; }
+  function showMessage(msg){ $("authMessage").textContent = msg || ""; }
+
+  async function loadCloud(){
+    data = loadLocal();
+    if(user && db){
+      const snap = await userDoc().get();
+      if(snap.exists){
+        data = Object.assign(blank(), snap.data());
+        saveLocal();
+      }else{
+        data.email = user.email || "";
+        data.name = user.displayName || "";
+        await saveCloud();
+      }
+    }
+    render();
+  }
+
+  async function saveCloud(){
+    saveLocal();
+    if(user && db){
+      await userDoc().set(data, {merge:true});
+    }
+  }
+
+  async function signIn(){
+    const email = $("authEmail").value.trim().toLowerCase();
+    const pass = $("authPassword").value;
+    if(!email || !pass){ showMessage("Mail ve şifre gir."); return; }
+    try{
+      showMessage("Giriş yapılıyor...");
+      await auth.signInWithEmailAndPassword(email, pass);
+    }catch(e){
+      showMessage(errorText(e));
+    }
+  }
+
+  async function register(){
+    const email = $("authEmail").value.trim().toLowerCase();
+    const pass = $("authPassword").value;
+    const name = $("authName").value.trim();
+    if(!email || !pass || pass.length < 6){ showMessage("Mail gir ve en az 6 karakter şifre yaz."); return; }
+    try{
+      showMessage("Hesap oluşturuluyor...");
+      const result = await auth.createUserWithEmailAndPassword(email, pass);
+      if(name) await result.user.updateProfile({displayName:name});
+      data = blank();
+      data.email = email;
+      data.name = name;
+      user = result.user;
+      await saveCloud();
+    }catch(e){
+      showMessage(errorText(e));
+    }
+  }
+
+  async function forgot(){
+    const email = $("authEmail").value.trim().toLowerCase();
+    if(!email){ showMessage("Şifre sıfırlamak için mail adresini yaz."); return; }
+    try{
+      await auth.sendPasswordResetEmail(email);
+      showMessage("Şifre sıfırlama maili gönderildi.");
+    }catch(e){ showMessage(errorText(e)); }
+  }
+
+  function errorText(e){
+    const code = e && e.code ? e.code : "";
+    if(code.includes("user-not-found")) return "Bu mail ile hesap bulunamadı.";
+    if(code.includes("wrong-password") || code.includes("invalid-credential")) return "Mail veya şifre hatalı.";
+    if(code.includes("email-already-in-use")) return "Bu mail ile zaten hesap var.";
+    if(code.includes("weak-password")) return "Şifre en az 6 karakter olmalı.";
+    if(code.includes("operation-not-allowed")) return "Firebase Authentication içinde Email/Password girişini açmalısın.";
+    return "İşlem yapılamadı: " + (e.message || code);
+  }
+
+  function setAuthMode(next){
+    mode = next;
+    $("loginTab").classList.toggle("active", mode==="login");
+    $("registerTab").classList.toggle("active", mode==="register");
+    $("authName").classList.toggle("hidden", mode==="login");
+    $("authSubmit").textContent = mode==="login" ? "Giriş Yap" : "Hesap Oluştur";
+    showMessage("");
+  }
+
+  function showApp(){
+    $("authScreen").classList.add("hidden");
+    $("appPage").classList.remove("hidden");
+    $("settingsBtn").classList.remove("hidden");
+  }
+
+  function showAuth(){
+    $("authScreen").classList.remove("hidden");
+    $("appPage").classList.add("hidden");
+    $("settingsBtn").classList.add("hidden");
+  }
 
   function setTrack(track){
     currentTrack = track;
@@ -59,6 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function tryAudio(list, i=0){
+    if(isBreak) return forceStopAudio();
     if(i>=list.length){ $("trackStatus").textContent="Ses dosyası bulunamadı."; return; }
     const audio=$("focusAudio");
     audio.src=list[i];
@@ -70,74 +159,40 @@ document.addEventListener("DOMContentLoaded", () => {
     }).catch(()=>tryAudio(list,i+1));
   }
 
-  function playAudio(){ 
-    if(isBreak){
-      forceStopAudio();
-      return;
-    }
-    if(!isAudioPlaying) tryAudio(paths(currentTrack)); 
-  }
-  function pauseAudio(){ 
-    if(isAudioPlaying){ 
-      $("focusAudio").pause(); 
-      isAudioPlaying=false; 
-      document.querySelector(".music-panel").classList.add("paused"); 
-      $("trackStatus").textContent="Duraklatıldı"; 
-    } 
-  }
+  function playAudio(){ if(!isBreak && !isAudioPlaying) tryAudio(paths(currentTrack)); }
+  function pauseAudio(){ if(isAudioPlaying){ $("focusAudio").pause(); isAudioPlaying=false; document.querySelector(".music-panel").classList.add("paused"); $("trackStatus").textContent="Duraklatıldı"; } }
+  function forceStopAudio(){ const a=$("focusAudio"); a.pause(); a.currentTime=0; isAudioPlaying=false; document.querySelector(".music-panel").classList.add("paused"); $("trackStatus").textContent="Mola sırasında ses kapalı"; }
 
   function playAlarm(){
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if(!AudioContext) return;
-    const ctx = new AudioContext();
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if(!Ctx) return;
+    const ctx = new Ctx();
     const gain = ctx.createGain();
     gain.gain.value = 0.08;
     gain.connect(ctx.destination);
-
     let count = 0;
     const beep = () => {
       const osc = ctx.createOscillator();
-      osc.type = "sine";
       osc.frequency.value = 880;
       osc.connect(gain);
       osc.start();
-      setTimeout(() => osc.stop(), 260);
+      setTimeout(()=>osc.stop(),260);
       count++;
-      if(count < 5) setTimeout(beep, 1000);
-      else setTimeout(() => ctx.close(), 1500);
+      if(count < 5) setTimeout(beep,1000);
+      else setTimeout(()=>ctx.close(),1500);
     };
     beep();
-  }
-  function forceStopAudio(){
-    const audio = $("focusAudio");
-    audio.pause();
-    audio.currentTime = 0;
-    isAudioPlaying = false;
-    document.querySelector(".music-panel").classList.add("paused");
-    $("trackStatus").textContent = "Mola sırasında ses kapalı";
-  }
-
-  function toggleAudio(){ 
-    if(isBreak){
-      $("trackStatus").textContent = "Mola sırasında ses kapalı";
-      return;
-    }
-    isAudioPlaying ? pauseAudio() : playAudio(); 
   }
 
   function start(){
     if(running) return;
     running=true;
     $("timerStatus").textContent = isBreak ? "Mola" : "Çalışıyor";
-    if(isBreak){
-      forceStopAudio();
-    }else{
-      playAudio();
-    }
-    timerId=setInterval(()=>{
+    if(isBreak) forceStopAudio(); else playAudio();
+    timerId=setInterval(async ()=>{
       if(remaining>0){
         remaining--;
-        if(!isBreak){ day().seconds++; data.totalSeconds++; save(); }
+        if(!isBreak){ day().seconds++; data.totalSeconds++; await saveCloud(); }
         render();
       }else finish();
     },1000);
@@ -148,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(!running) return;
     clearInterval(timerId);
     running=false;
-    if(!isBreak){ day().pauses++; save(); }
+    if(!isBreak){ day().pauses++; saveCloud(); }
     pauseAudio();
     $("timerStatus").textContent="Duraklatıldı";
     render();
@@ -179,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
     start();
   }
 
-  function finish(){
+  async function finish(){
     clearInterval(timerId);
     running=false;
 
@@ -188,7 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
       totalSeconds=focusSeconds;
       remaining=totalSeconds;
       $("timerStatus").textContent="Mola bitti";
-      pauseAudio();
+      forceStopAudio();
       playAlarm();
       render();
       return;
@@ -198,9 +253,9 @@ document.addEventListener("DOMContentLoaded", () => {
     data.totalPomodoros++;
     data.sessions.unshift(new Date().toLocaleString("tr-TR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})+" • "+Math.round(focusSeconds/60)+" dk");
     data.sessions=data.sessions.slice(0,8);
-    save();
+    await saveCloud();
 
-    if($("autoBreak").checked){ forceStopAudio(); startBreak(5); }
+    if($("autoBreak").checked) startBreak(5);
     else { pauseAudio(); $("successModal").classList.add("show"); $("timerStatus").textContent="Tamamlandı"; render(); }
   }
 
@@ -228,39 +283,23 @@ document.addEventListener("DOMContentLoaded", () => {
     return "Günlük hedef tamamlandı. Şimdi tekrar veya yanlış analizi daha verimli olur.";
   }
 
-  function setText(id,value){ const el=$(id); if(el) el.textContent=value; }
-  function setValue(id,value){ const el=$(id); if(el) el.value=value; }
-
   function render(){
     const d=day(), min=Math.floor(d.seconds/60), pct=Math.min(100,Math.round(min/60*100));
-    setText("timerText",fmt(remaining));
-    if($("timerRing")) $("timerRing").style.setProperty("--progress", ((totalSeconds-remaining)/totalSeconds*360)+"deg");
-    if($("mainToggleBtn")){
-      $("mainToggleBtn").textContent = running ? "Duraklat" : (remaining<totalSeconds ? "Devam Et" : "Başlat");
-      $("mainToggleBtn").classList.toggle("running", running);
-    }
-    setText("savedPlan", data.plan || "Henüz plan yazılmadı.");
-    setValue("planInput", data.plan || "");
-    setText("aiAdvice", advice());
-    setText("todayMinutes", min+" dk");
-    setText("todayPomodoros", d.pomodoros);
-    setText("focusScore", score()+"%");
-    setText("streakDays", streak());
-    if($("progressFill")) $("progressFill").style.width = pct+"%";
-    setText("progressText", min+" / 60 dk • %"+pct);
-    setText("profileInfo", profile==="default" ? "Genel profil kullanılıyor." : "Aktif profil: "+(data.name || profile));
-    const syncCard = $("syncStatusCard");
-    if(syncCard){
-      if(cloudReady){
-        syncCard.classList.add("cloud");
-        syncCard.innerHTML = "<b>Bulut bağlantısı hazır</b><span>Bu profil farklı cihazlarda senkronize edilebilir.</span>";
-      }else{
-        syncCard.classList.remove("cloud");
-        syncCard.innerHTML = "<b>Yerel kayıt aktif</b><span>Firebase bilgileri eklenince telefon, tablet ve bilgisayarda aynı kayıtlar açılır.</span>";
-      }
-    }
-    setValue("emailInput", profile==="default" ? "" : profile);
-    setValue("nameInput", data.name || "");
+    $("timerText").textContent=fmt(remaining);
+    $("timerRing").style.setProperty("--progress", ((totalSeconds-remaining)/totalSeconds*360)+"deg");
+    $("mainToggleBtn").textContent = running ? "Duraklat" : (remaining<totalSeconds ? "Devam Et" : "Başlat");
+    $("mainToggleBtn").classList.toggle("running", running);
+    $("savedPlan").textContent = data.plan || "Henüz plan yazılmadı.";
+    $("planInput").value = data.plan || "";
+    $("aiAdvice").textContent = advice();
+    $("todayMinutes").textContent = min+" dk";
+    $("todayPomodoros").textContent = d.pomodoros;
+    $("focusScore").textContent = score()+"%";
+    $("streakDays").textContent = streak();
+    $("progressFill").style.width = pct+"%";
+    $("progressText").textContent = min+" / 60 dk • %"+pct;
+    $("accountEmail").textContent = user ? user.email : "";
+    $("profileNameInput").value = data.name || "";
     renderNotes();
     renderSessions();
   }
@@ -273,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
       div.className="list-item";
       div.innerHTML="<span></span><button>Sil</button>";
       div.querySelector("span").textContent=n;
-      div.querySelector("button").onclick=()=>{data.notes.splice(i,1);save();render();};
+      div.querySelector("button").onclick=async()=>{data.notes.splice(i,1);await saveCloud();render();};
       box.appendChild(div);
     });
   }
@@ -289,18 +328,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function savePlan(){ data.plan=$("planInput").value.trim(); save(); render(); }
-  function addNote(){ const v=$("noteInput").value.trim(); if(!v)return; data.notes.push(v); $("noteInput").value=""; save(); render(); }
-
-  function login(){
-    const email=$("emailInput").value.trim().toLowerCase(), name=$("nameInput").value.trim();
-    if(!email || !email.includes("@")){ alert("Geçerli mail gir."); return; }
-    profile=email; localStorage.setItem("sezr_focus_profile",profile); data=load(); data.email=email; if(name)data.name=name; save(); reset(); render();
-  }
-  function general(){ profile="default"; localStorage.setItem("sezr_focus_profile",profile); data=load(); reset(); render(); }
+  async function savePlan(){ data.plan=$("planInput").value.trim(); await saveCloud(); render(); }
+  async function addNote(){ const v=$("noteInput").value.trim(); if(!v)return; data.notes.push(v); $("noteInput").value=""; await saveCloud(); render(); }
+  async function saveProfile(){ data.name=$("profileNameInput").value.trim(); await saveCloud(); render(); $("settingsPanel").classList.remove("show"); }
   function exportData(){ const raw=JSON.stringify(data); navigator.clipboard?navigator.clipboard.writeText(raw).then(()=>alert("Yedek kodu kopyalandı.")):prompt("Yedek kodu:",raw); }
-  function importData(){ const raw=prompt("Yedek kodunu yapıştır:"); if(!raw)return; try{data=Object.assign(blank(),JSON.parse(raw)); save(); render(); alert("Yedek yüklendi.");}catch{alert("Yedek okunamadı.");} }
-  function resetData(){ if(!confirm("Bu profilin verileri silinsin mi?"))return; data=blank(); save(); reset(); render(); }
+  async function importData(){ const raw=prompt("Yedek kodunu yapıştır:"); if(!raw)return; try{data=Object.assign(blank(),JSON.parse(raw)); await saveCloud(); render(); alert("Yedek yüklendi.");}catch{alert("Yedek okunamadı.");} }
+  async function resetData(){ if(!confirm("Bu hesabın verileri silinsin mi?"))return; data=blank(); data.email=user.email; await saveCloud(); reset(); render(); }
 
   function ambience(){
     const rain=$("rainLayer");
@@ -309,36 +342,43 @@ document.addEventListener("DOMContentLoaded", () => {
     for(let i=0;i<28;i++){ const s=document.createElement("span"); s.className="sym"; s.textContent=syms[i%syms.length]; s.style.left=Math.random()*100+"%"; s.style.top=Math.random()*100+"%"; s.style.fontSize=(24+Math.random()*58)+"px"; s.style.animationDuration=(10+Math.random()*15)+"s"; layer.appendChild(s); }
   }
 
-  on("mainToggleBtn","click",toggle);
-  on("resetBtn","click",reset);
-  on("savePlanBtn","click",savePlan);
-  on("addNoteBtn","click",addNote);
+  $("loginTab").onclick=()=>setAuthMode("login");
+  $("registerTab").onclick=()=>setAuthMode("register");
+  $("authSubmit").onclick=()=> mode==="login" ? signIn() : register();
+  $("forgotBtn").onclick=forgot;
+  $("mainToggleBtn").onclick=toggle;
+  $("resetBtn").onclick=reset;
+  $("savePlanBtn").onclick=savePlan;
+  $("addNoteBtn").onclick=addNote;
   $("volumeRange").oninput=e=>{ $("focusAudio").volume=e.target.value/100; $("volumeText").textContent="🔊 "+e.target.value+"%"; };
-  on("settingsBtn","click",()=>{$("settingsPanel").classList.toggle("show");});
-  on("closeSettingsBtn","click",()=>{$("settingsPanel").classList.remove("show");});
-  on("loginBtn","click",login);
-  on("generalBtn","click",general);
-  on("exportBtn","click",exportData);
-  on("importBtn","click",importData);
-  on("resetDataBtn","click",resetData);
-  on("closeModalBtn","click",()=>{ $("successModal").classList.remove("show"); reset(); });
+  $("settingsBtn").onclick=()=>$("settingsPanel").classList.toggle("show");
+  $("closeSettingsBtn").onclick=()=>$("settingsPanel").classList.remove("show");
+  $("saveProfileBtn").onclick=saveProfile;
+  $("logoutBtn").onclick=()=>auth.signOut();
+  $("exportBtn").onclick=exportData;
+  $("importBtn").onclick=importData;
+  $("resetDataBtn").onclick=resetData;
+  $("closeModalBtn").onclick=()=>{ $("successModal").classList.remove("show"); reset(); };
   document.querySelectorAll(".mode").forEach(btn=>btn.onclick=()=>{ document.querySelectorAll(".mode").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); focusSeconds=Number(btn.dataset.min)*60; totalSeconds=focusSeconds; remaining=totalSeconds; reset(); });
   document.querySelectorAll(".break-btn").forEach(btn=>btn.onclick=()=>startBreak(Number(btn.dataset.break)));
   document.querySelectorAll(".track").forEach(btn=>btn.onclick=()=>{ const was=isAudioPlaying; pauseAudio(); setTrack(btn.dataset.track); if(was) playAudio(); });
   document.addEventListener("keydown",e=>{ const tag=(e.target.tagName||"").toLowerCase(); if(tag==="input"||tag==="textarea")return; if(e.code==="Space"){e.preventDefault();toggle();} });
 
+  if(auth){
+    auth.onAuthStateChanged(async current=>{
+      user=current;
+      if(user){
+        showApp();
+        await loadCloud();
+      }else{
+        showAuth();
+      }
+    });
+  }else{
+    showMessage("Firebase yüklenemedi. İnternet bağlantısını veya config dosyasını kontrol et.");
+  }
+
   ambience();
   setTrack("rain");
   document.querySelector(".music-panel").classList.add("paused");
-  render();
 });
-
-  // Firebase hazır mı kontrol
-  setTimeout(()=>{
-    const card = document.getElementById("syncStatusCard");
-    if(window.sezrFirebaseReady && card){
-      card.classList.add("cloud");
-      card.innerHTML = "<b>Bulut sistemi aktif</b><span>Bu hesap farklı cihazlarda kullanılmaya hazır.</span>";
-    }
-  },1200);
-

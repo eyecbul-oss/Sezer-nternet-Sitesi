@@ -1,7 +1,5 @@
-
 window.SEZR_FOCUS_CONFIG = {
   firebaseEnabled: true,
-
   firebase: {
     apiKey: "AIzaSyCWH-I-qn8-prKwAY_BUDA-Pt3IsY50JLs",
     authDomain: "sezrmatematik-f7c5b.firebaseapp.com",

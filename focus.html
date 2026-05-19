@@ -13,7 +13,37 @@
   <div id="symbolLayer" class="symbol-layer"></div>
   <audio id="focusAudio" loop preload="metadata" playsinline></audio>
 
-  <div class="page">
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="auth-brand">Sez<span>R</span> Focus</div>
+      <h1>Çalışma hesabına giriş yap</h1>
+      <p>Mail ve şifrenle giriş yap. Farklı cihazdan girince kayıtların aynı hesaptan açılır.</p>
+
+      <div class="auth-tabs">
+        <button id="loginTab" class="active">Giriş Yap</button>
+        <button id="registerTab">Hesap Oluştur</button>
+      </div>
+
+      <label>Mail adresi</label>
+      <input id="authEmail" type="email" placeholder="ogrenci@mail.com" autocomplete="email">
+
+      <label>Şifre</label>
+      <input id="authPassword" type="password" placeholder="En az 6 karakter" autocomplete="current-password">
+
+      <input id="authName" class="hidden" placeholder="Ad Soyad">
+
+      <button id="authSubmit" class="auth-submit">Giriş Yap</button>
+      <button id="forgotBtn" class="auth-link">Şifremi unuttum</button>
+
+      <div id="authMessage" class="auth-message"></div>
+
+      <div class="auth-note">
+        <b>Not:</b> Firebase Authentication’da Email/Password açık olmalı. Firestore açık olursa kayıtlar buluta gider.
+      </div>
+    </div>
+  </section>
+
+  <div id="appPage" class="page hidden">
     <header class="topbar">
       <div class="logo">Sez<span>R</span> Focus</div>
       <nav>
@@ -80,7 +110,7 @@
       </section>
     </main>
 
-    <section class="music-panel">
+    <section class="music-panel paused">
       <div class="music-now">
         <div>
           <h2 id="trackTitle">Rain Focus</h2>
@@ -135,45 +165,32 @@
     </section>
   </div>
 
-  <button id="settingsBtn" class="settings-btn" aria-label="Ayarlar"><span>⚙</span></button>
+  <button id="settingsBtn" class="settings-btn hidden" aria-label="Ayarlar"><span>⚙</span></button>
   <aside id="settingsPanel" class="settings-panel">
     <div class="settings-head">
       <div>
-        <h2>Ayarlar</h2>
-        <p>Profil ve kayıt sistemi</p>
+        <h2>Hesap</h2>
+        <p id="accountEmail">Yükleniyor...</p>
       </div>
       <button id="closeSettingsBtn" class="close-settings">×</button>
     </div>
 
-    <div class="sync-card" id="syncStatusCard">
-      <b>Yerel kayıt aktif</b>
-      <span>Firebase bilgileri eklenince telefon, tablet ve bilgisayarda aynı kayıtlar açılır.</span>
+    <div id="syncStatus" class="sync-card">
+      <b>Bulut bağlantısı</b>
+      <span>Kayıtlar hesabına bağlanıyor.</span>
     </div>
 
-    <label>Öğrenci mail</label>
-    <input id="emailInput" type="email" placeholder="ogrenci@mail.com">
-
-    <label>Öğrenci adı</label>
-    <input id="nameInput" placeholder="Öğrenci adı">
+    <label>Ad Soyad</label>
+    <input id="profileNameInput" placeholder="Ad Soyad">
 
     <div class="settings-actions">
-      <button id="loginBtn" class="gold-action">Profile Geç</button>
-      <button id="generalBtn">Genel Profil</button>
+      <button id="saveProfileBtn" class="gold-action">Profili Kaydet</button>
+      <button id="logoutBtn">Çıkış Yap</button>
     </div>
 
-    <div id="profileInfo" class="info-box">Genel profil kullanılıyor.</div>
-
-    <div class="cloud-note">
-      <b>Bulut hazırlığı:</b>
-      <span>Firebase kurulunca bu panel gerçek giriş ve senkronizasyon sistemine bağlanacak.</span>
-    </div>
-
-    <div class="settings-actions">
-      <button id="exportBtn">Yedek Kodu Al</button>
-      <button id="importBtn">Yedekten Yükle</button>
-    </div>
-
-    <button id="resetDataBtn" class="danger">Bu Profilin Verilerini Sıfırla</button>
+    <button id="exportBtn">Yedek Kodu Al</button>
+    <button id="importBtn">Yedekten Yükle</button>
+    <button id="resetDataBtn" class="danger">Bu Hesabın Focus Verilerini Sıfırla</button>
   </aside>
 
   <div id="successModal" class="modal">
@@ -185,24 +202,9 @@
   </div>
 
   <script src="focus-config.js"></script>
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-    import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
-    const config = window.SEZR_FOCUS_CONFIG;
-
-    if(config && config.firebaseEnabled){
-      const app = initializeApp(config.firebase);
-      window.sezrFirebaseAuth = getAuth(app);
-      window.sezrFirebaseDB = getFirestore(app);
-      window.sezrFirebaseReady = true;
-      console.log("Firebase hazır");
-    }else{
-      window.sezrFirebaseReady = false;
-    }
-  </script>
-
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script src="focus-app.js"></script>
 </body>
 </html>
