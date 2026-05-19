@@ -1633,3 +1633,26 @@ textarea{
 .auth-message.success{color:#bbf7d0!important}
 *:not(input):not(textarea){user-select:none;-webkit-user-select:none}
 input,textarea{user-select:text!important;-webkit-user-select:text!important}
+
+
+/* CLOUD SYNC FIX */
+.cloud-sync-status{
+  margin:12px 0;
+  padding:13px 14px;
+  border-radius:16px;
+  background:rgba(56,189,248,.10);
+  border:1px solid rgba(56,189,248,.22);
+  color:#dbeafe;
+  font-weight:900;
+  line-height:1.45;
+}
+.cloud-sync-status.ok{
+  background:rgba(34,197,94,.10);
+  border-color:rgba(34,197,94,.22);
+  color:#dcfce7;
+}
+.cloud-sync-status.warn{
+  background:rgba(249,115,22,.10);
+  border-color:rgba(249,115,22,.25);
+  color:#fed7aa;
+}

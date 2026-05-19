@@ -113,30 +113,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function saveCloud(){
     saveLocal();
-    if(guestMode || !user || !db) return;
+
+    if(guestMode || !user || !db){
+      setCloudStatus("Misafir mod: kayıtlar sadece bu cihazda saklanır.","warn");
+      return;
+    }
+
     try{
+      data.email = user.email || data.email || "";
+      data.updatedAt = new Date().toISOString();
       await db.collection("focusUsers").doc(user.uid).set(data,{merge:true});
+      setCloudStatus("Bulut aktif: kayıtlar bu hesaba kaydediliyor.","ok");
     }catch(e){
       console.warn("Cloud save failed:", e);
+      setCloudStatus("Buluta yazılamadı. Firestore izinlerini kontrol et.","warn");
     }
   }
 
   async function loadCloud(){
     data = loadLocal();
+
     if(!guestMode && user && db){
       try{
-        const snap = await db.collection("focusUsers").doc(user.uid).get();
+        const ref = db.collection("focusUsers").doc(user.uid);
+        const snap = await ref.get();
+
         if(snap.exists){
           data = Object.assign(blank(), snap.data());
           saveLocal();
+          setCloudStatus("Bulut aktif: kayıtlar bu hesaptan yüklendi.","ok");
         }else{
           data.email = user.email || "";
-          await saveCloud();
+          data.updatedAt = new Date().toISOString();
+          await ref.set(data,{merge:true});
+          saveLocal();
+          setCloudStatus("Bulut aktif: bu hesap için yeni kayıt oluşturuldu.","ok");
         }
       }catch(e){
         console.warn("Cloud load failed:", e);
+        data.email = user.email || data.email || "";
+        setCloudStatus("Bulut okunamadı. Firestore kuralları izin vermiyor olabilir.","warn");
       }
+    }else{
+      setCloudStatus("Misafir mod: kayıtlar sadece bu cihazda saklanır.","warn");
     }
+
     render();
   }
 
@@ -151,6 +172,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if(!el) return;
     el.textContent = msg || "";
     el.className = "auth-message" + (type ? " " + type : "");
+  }
+
+  function setCloudStatus(text,type=""){
+    const el = $("cloudSyncStatus");
+    if(!el) return;
+    el.textContent = text;
+    el.className = "cloud-sync-status" + (type ? " " + type : "");
   }
 
   function showApp(){
@@ -172,6 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("sezr_guest_mode","1");
     data = loadLocal();
     showApp();
+    setCloudStatus("Misafir mod: kayıtlar sadece bu cihazda saklanır.","warn");
     render();
   }
 
@@ -184,12 +213,15 @@ document.addEventListener("DOMContentLoaded", () => {
     try{
       if($("authSubmit")) $("authSubmit").disabled = true;
       showMessage("Giriş yapılıyor...");
-      await Promise.race([
+      const result = await Promise.race([
         auth.signInWithEmailAndPassword(email, pass),
         new Promise((_, reject) => setTimeout(()=>reject(new Error("timeout")), 8000))
       ]);
+      user = result.user;
       guestMode = false;
       localStorage.removeItem("sezr_guest_mode");
+      showApp();
+      await loadCloud();
       showMessage("Giriş başarılı.","success");
     }catch(e){
       showMessage(e.message === "timeout" ? "Giriş uzun sürdü. Misafir devam et." : authError(e),"error");
@@ -216,7 +248,9 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.removeItem("sezr_guest_mode");
       data = blank();
       data.email = email;
+      showApp();
       await saveCloud();
+      render();
       showMessage("Hesap oluşturuldu.","success");
     }catch(e){
       showMessage(e.message === "timeout" ? "İşlem uzun sürdü. Misafir devam et." : authError(e),"error");
@@ -882,6 +916,9 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.classList.toggle("active", Number(btn.dataset.target) === target);
     });
     if($("accountEmail")) $("accountEmail").textContent = guestMode ? "Misafir mod" : (user ? user.email : "");
+    if(user && !guestMode && $("cloudSyncStatus") && !$("cloudSyncStatus").classList.contains("warn")){
+      setCloudStatus("Bulut aktif: kayıtlar bu hesaba bağlı.","ok");
+    }
     if($("profileChip")) $("profileChip").textContent = guestMode ? "Misafir Mod" : (user ? user.email : "Hesap");
 
     renderWeekly();
