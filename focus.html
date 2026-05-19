@@ -1299,6 +1299,62 @@ h1{
   .report-pretty{grid-template-columns:1fr}
 }
 
+
+.ai-advice-card{
+  margin-top:20px;
+  padding:26px;
+  border-radius:32px;
+  background:linear-gradient(135deg,rgba(167,139,250,.13),rgba(56,189,248,.09)),rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 18px 42px rgba(0,0,0,.24);
+}
+.ai-advice-card h3{
+  font-family:Montserrat,Inter,sans-serif;
+  font-size:28px;
+  margin-bottom:10px;
+}
+.ai-advice-card p{
+  color:#dbeafe;
+  line-height:1.7;
+  font-weight:800;
+}
+.ai-tag-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:14px;
+}
+.ai-tag{
+  padding:8px 11px;
+  border-radius:999px;
+  background:rgba(250,204,21,.12);
+  border:1px solid rgba(250,204,21,.22);
+  color:#fde68a;
+  font-size:12px;
+  font-weight:900;
+}
+.ai-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+.ai-actions button{
+  min-height:46px;
+  padding:0 14px;
+  border-radius:15px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(15,23,42,.86);
+  color:white;
+  font-weight:900;
+  cursor:pointer;
+}
+.ai-actions button.primary{
+  background:var(--gold);
+  color:#111827;
+  border-color:var(--gold);
+}
+
 </style>
 </head>
 
@@ -1466,6 +1522,17 @@ h1{
     <p style="color:#dbeafe;line-height:1.6">Bugün en az 60 dakika çalışma hedefi. İlerleme gerçek çalışma sürene göre hesaplanır.</p>
     <div class="progress-line"><div class="progress-fill" id="dailyProgress"></div></div>
     <div class="session-item" id="dailyProgressText">0 / 60 dk</div>
+  </section>
+
+
+  <section class="ai-advice-card">
+    <h3>AI Tavsiyesi</h3>
+    <p id="aiAdviceText">Verilerin analiz ediliyor...</p>
+    <div class="ai-tag-row" id="aiTags"></div>
+    <div class="ai-actions">
+      <button class="primary" onclick="refreshAiAdvice()">Tavsiyeyi Yenile</button>
+      <button onclick="applyAiSuggestion()">Öneriyi Hedefe Yaz</button>
+    </div>
   </section>
 
   <h2 class="section-title">Haftalık Özet</h2>
@@ -2613,9 +2680,80 @@ renderEverything = function(){
   renderStudentCards();
   renderQuickReport();
   renderSessionSuggestion();
+  renderAiAdvice();
   updateTimer();
   updateCloudStatus();
 };
+
+
+let lastAiSuggestion = "";
+
+function buildAiAdvice(){
+  ensureToday();
+  const day = stats.days[todayKey] || {seconds:0,pomodoros:0,pauses:0};
+  const minutes = Math.floor(day.seconds / 60);
+  const pomos = day.pomodoros || 0;
+  const pauses = day.pauses || 0;
+  const score = calculateFocusScore();
+
+  let advice = "";
+  let tags = [];
+
+  if(minutes === 0){
+    advice = "Bugün henüz çalışma başlamamış. En kolay başlangıç için 25 dakikalık tek bir seans seç ve sadece bir konuya odaklan.";
+    lastAiSuggestion = "25 dakika odaklanıp 10 problem çözeceğim.";
+    tags = ["Başlangıç", "25 dk", "Tek konu"];
+  }else if(minutes < 20){
+    advice = "Başlangıç yapılmış ama ritim henüz oluşmamış. Şimdi kısa bir ikinci seans eklemek günü kurtarır.";
+    lastAiSuggestion = "Bir 25 dakika daha çalışıp yarım kalan konuyu tamamlayacağım.";
+    tags = ["Ritim kur", "Kısa seans", "Devam"];
+  }else if(minutes < 60){
+    advice = "Bugün iyi gidiyor. 60 dakikalık hedefe yaklaşmak için bir pomodoro daha eklemek mantıklı.";
+    lastAiSuggestion = "Bugünkü toplamı 60 dakikaya tamamlayacağım.";
+    tags = ["Hedefe yaklaş", "1 seans daha", "60 dk"];
+  }else if(score >= 80 && pomos >= 2){
+    advice = "Bugünkü odak kaliten güçlü. Artık ağır konu yerine tekrar veya yanlış analizi yapmak daha verimli olur.";
+    lastAiSuggestion = "Yanlış yaptığım soruları tekrar inceleyeceğim.";
+    tags = ["Güçlü performans", "Yanlış analizi", "Tekrar"];
+  }else if(pauses >= 4){
+    advice = "Çok duraklatma var. Bir sonraki seansta telefonu uzaklaştırıp daha kısa ama kesintisiz çalışma dene.";
+    lastAiSuggestion = "25 dakika boyunca telefonu uzak tutup kesintisiz çalışacağım.";
+    tags = ["Dikkat", "Kesintisiz", "Telefonu uzaklaştır"];
+  }else{
+    advice = "Çalışma düzenin oluşuyor. Bir sonraki adım aynı saatte tekrar seans yapmak; bu alışkanlığı güçlendirir.";
+    lastAiSuggestion = "Yarın aynı saatte 25 dakika çalışacağım.";
+    tags = ["Alışkanlık", "Aynı saat", "Devam"];
+  }
+
+  return {advice,tags};
+}
+
+function renderAiAdvice(){
+  const text = document.getElementById("aiAdviceText");
+  const tagBox = document.getElementById("aiTags");
+  if(!text || !tagBox) return;
+  const result = buildAiAdvice();
+  text.textContent = result.advice;
+  tagBox.innerHTML = "";
+  result.tags.forEach(function(t){
+    const span = document.createElement("span");
+    span.className = "ai-tag";
+    span.textContent = t;
+    tagBox.appendChild(span);
+  });
+}
+
+function refreshAiAdvice(){
+  renderAiAdvice();
+}
+
+function applyAiSuggestion(){
+  const goal = document.getElementById("goalInput");
+  if(goal){
+    goal.value = lastAiSuggestion || "25 dakika odaklanacağım.";
+    saveGoal();
+  }
+}
 
 </script>
 
