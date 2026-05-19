@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let saveTimer = null;
   let saveBusy = false;
 
-  function blank(){ return {name:"",email:"",plan:"",dailyTarget:60,notes:[],sessions:[],totalSeconds:0,totalPomodoros:0,days:{}}; }
+  function blank(){ return {name:"",email:"",plan:"",dailyTarget:60,notes:[],sessions:[],planHistory:[],totalSeconds:0,totalPomodoros:0,days:{}}; }
   function localKey(){ return user ? "sezr_focus_cloud_" + user.uid : "sezr_focus_guest"; }
   function saveLocal(){ localStorage.setItem(localKey(), JSON.stringify(data)); }
   function loadLocal(){ try{return Object.assign(blank(), JSON.parse(localStorage.getItem(localKey()) || "{}"));}catch{return blank();} }
@@ -295,7 +295,20 @@ document.addEventListener("DOMContentLoaded", () => {
     queueSave();
 
     if($("autoBreak").checked) startBreak(5);
-    else { pauseAudio(); $("successModal").classList.add("show"); $("timerStatus").textContent="Tamamlandı"; render(); }
+    else { 
+      pauseAudio(); 
+      const modalBox = document.querySelector(".modal-box");
+      if(modalBox && !modalBox.querySelector(".mini-result")){
+        const div = document.createElement("div");
+        div.className = "mini-result";
+        modalBox.insertBefore(div, modalBox.querySelector("button"));
+      }
+      const result = document.querySelector(".modal-box .mini-result");
+      if(result) result.textContent = buildTodaySummary();
+      $("successModal").classList.add("show"); 
+      $("timerStatus").textContent="Tamamlandı"; 
+      render(); 
+    }
   }
 
   function score(){
@@ -420,6 +433,47 @@ renderNotes();
     renderSessions();
   }
 
+
+  function buildTodaySummary(){
+    const d = day();
+    const min = Math.floor((d.seconds || 0) / 60);
+    const plan = data.plan ? data.plan : "Plan yazılmadı";
+    const done = d.planDone ? "tamamlandı" : "devam ediyor";
+    return "Plan: " + plan + " • Durum: " + done + " • Süre: " + min + " dk • Pomodoro: " + (d.pomodoros || 0);
+  }
+
+  function renderTodaySummary(){
+    const el = $("todaySummaryText");
+    if(el) el.textContent = buildTodaySummary();
+  }
+
+  function copyTodaySummary(){
+    const text = "SezR Focus Günlük Özet\\n" + buildTodaySummary();
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(text).then(()=>alert("Özet kopyalandı."));
+    }else{
+      prompt("Özeti kopyala:", text);
+    }
+  }
+
+  function renderPlanHistory(){
+    const box = $("planHistoryList");
+    if(!box) return;
+    const list = data.planHistory || [];
+    box.innerHTML = "";
+    if(list.length === 0){
+      box.innerHTML = '<div class="list-item">Henüz plan geçmişi yok.</div>';
+      return;
+    }
+    list.slice(0,6).forEach(item=>{
+      const div = document.createElement("div");
+      div.className = "list-item";
+      div.innerHTML = "<span></span>";
+      div.querySelector("span").textContent = item.date + " " + item.time + " • " + item.text;
+      box.appendChild(div);
+    });
+  }
+
   function renderNotes(){
     const box=$("noteList"); box.innerHTML="";
     if(data.notes.length===0){ box.innerHTML='<div class="list-item">Henüz not yok.</div>'; return; }
@@ -445,7 +499,17 @@ renderNotes();
   }
 
   async function savePlan(){ 
-    data.plan=$("planInput").value.trim(); 
+    const newPlan = $("planInput").value.trim();
+    if(newPlan && newPlan !== data.plan){
+      data.planHistory = data.planHistory || [];
+      data.planHistory.unshift({
+        text:newPlan,
+        date:new Date().toLocaleDateString("tr-TR"),
+        time:new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})
+      });
+      data.planHistory = data.planHistory.slice(0,8);
+    }
+    data.plan = newPlan; 
     day().planDone = false;
     await saveCloud(); 
     render(); 
@@ -472,6 +536,7 @@ function exportData(){ const raw=JSON.stringify(data); navigator.clipboard?navig
   $("completePlanBtn").onclick=togglePlanDone;
   if($("dailyTargetSelect")) $("dailyTargetSelect").onchange=changeDailyTarget;
   $("addNoteBtn").onclick=addNote;
+  if($("copySummaryBtn")) $("copySummaryBtn").onclick=copyTodaySummary;
   $("volumeRange").oninput=e=>{ $("focusAudio").volume=e.target.value/100; $("volumeText").textContent="🔊 "+e.target.value+"%"; };
   $("settingsBtn").onclick=()=>$("settingsPanel").classList.toggle("show");
   $("closeSettingsBtn").onclick=()=>$("settingsPanel").classList.remove("show");
