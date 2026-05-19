@@ -406,6 +406,8 @@ document.addEventListener("DOMContentLoaded", () => {
       $("examHours").textContent = "0";
       $("examMinutes").textContent = "0";
       $("examAdvice").textContent = "Seçilen tarih geçmiş görünüyor. Yeni tarih seçebilirsin.";
+      if($("examMiniPlan")) $("examMiniPlan").innerHTML = "";
+      if($("studyIntensity")) $("studyIntensity").textContent = "";
       return;
     }
 
@@ -426,6 +428,53 @@ document.addEventListener("DOMContentLoaded", () => {
     else advice = "Son hafta: hafif tekrar, uyku düzeni ve moral önemli.";
 
     $("examAdvice").textContent = advice;
+
+    const mini = $("examMiniPlan");
+    if(mini){
+      let s1 = "Konu tekrarı";
+      let s2 = "Soru pratiği";
+      let s3 = "Yanlış analizi";
+
+      if(days <= 30){
+        s1 = "Deneme analizi";
+        s2 = "Eksik konu tekrarı";
+        s3 = "Süre kontrolü";
+      }
+      if(days <= 7){
+        s1 = "Hafif tekrar";
+        s2 = "Uyku düzeni";
+        s3 = "Moral koruma";
+      }
+
+      mini.innerHTML =
+        '<div class="exam-mini-step"><b>1</b><span>'+s1+'</span></div>' +
+        '<div class="exam-mini-step"><b>2</b><span>'+s2+'</span></div>' +
+        '<div class="exam-mini-step"><b>3</b><span>'+s3+'</span></div>';
+    }
+
+    const intensity = $("studyIntensity");
+    if(intensity){
+      const todayMin = Math.floor((day().seconds || 0) / 60);
+      let suggested = 45;
+      if(days > 120) suggested = 45;
+      else if(days > 60) suggested = 60;
+      else if(days > 30) suggested = 75;
+      else if(days > 7) suggested = 90;
+      else suggested = 60;
+
+      intensity.classList.remove("good","warn");
+      let text = "Önerilen günlük çalışma: " + suggested + " dk.";
+      if(todayMin >= suggested){
+        intensity.classList.add("good");
+        text += " Bugün bu seviyeyi yakaladın.";
+      }else if(todayMin > 0){
+        intensity.classList.add("warn");
+        text += " Bugün kalan öneri: " + Math.max(0, suggested - todayMin) + " dk.";
+      }else{
+        text += " Bugün henüz başlamadın.";
+      }
+      intensity.textContent = text;
+    }
   }
 
   async function saveExamSettings(){
@@ -572,7 +621,8 @@ renderNotes();
     const plan = data.plan ? data.plan : "Plan yazılmadı";
     const done = d.planDone ? "tamamlandı" : "devam ediyor";
     const subject = data.selectedSubject ? " • Konu: " + data.selectedSubject : "";
-    return "Plan: " + plan + subject + " • Durum: " + done + " • Süre: " + min + " dk • Pomodoro: " + (d.pomodoros || 0);
+    const exam = data.exam && data.exam.type ? " • Sınav: " + data.exam.type : "";
+    return "Plan: " + plan + subject + exam + " • Durum: " + done + " • Süre: " + min + " dk • Pomodoro: " + (d.pomodoros || 0);
   }
 
   function renderTodaySummary(){
