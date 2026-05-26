@@ -1,0 +1,1 @@
+window.sezrAnalytics={track:(eventName)=>{console.log('Analytics event:',eventName)}};document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('click',()=>{window.sezrAnalytics.track(el.innerText||'interaction')})});
